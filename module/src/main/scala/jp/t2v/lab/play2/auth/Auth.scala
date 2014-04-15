@@ -18,7 +18,7 @@ trait Auth {
     def async[A](p: BodyParser[A], authority: Authority)(f: User => Request[A] => Future[SimpleResult]): Action[(A, User)] = {
       val parser = BodyParser {
         req => authorized(authority)(req) match {
-          case Right(user)  => p.map((_, user))(req)
+          case Right(user)  => p.map((_, user)).apply(req)
           case Left(result) => Done(Left(result), Input.Empty)
         }
       }
