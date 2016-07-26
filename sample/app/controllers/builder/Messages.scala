@@ -3,12 +3,12 @@ package controllers.builder
 import javax.inject.Inject
 
 import jp.t2v.lab.play2.auth.AuthActionBuilders
-import jp.t2v.lab.play2.auth.sample.Account
+import jp.t2v.lab.play2.auth.sample.{Account, Accounts}
 import jp.t2v.lab.play2.auth.sample.Role._
 import play.api.Environment
 import play.api.mvc._
 import play.twirl.api.Html
-import scalikejdbc.{ DB, DBSession }
+import scalikejdbc.{DB, DBSession}
 import views.html
 
 import scala.concurrent.Future
@@ -24,7 +24,7 @@ object TransactionalAction extends ActionBuilder[TransactionalRequest] {
   }
 }
 
-class Messages @Inject() (val environment: Environment) extends Controller with AuthActionBuilders with AuthConfigImpl {
+class Messages @Inject() (val environment: Environment, val accounts: Accounts) extends Controller with AuthActionBuilders with AuthConfigImpl {
 
   type AuthTxRequest[+A] = GenericAuthRequest[A, TransactionalRequest]
   final def AuthorizationTxAction(authority: Authority): ActionBuilder[AuthTxRequest] = composeAuthorizationAction(TransactionalAction)(authority)

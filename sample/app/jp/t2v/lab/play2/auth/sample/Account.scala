@@ -1,5 +1,8 @@
 package jp.t2v.lab.play2.auth.sample
 
+import javax.inject.{Inject, Singleton}
+
+import jp.t2v.lab.play2.auth.sample.Role.{Administrator, NormalUser}
 import org.mindrot.jbcrypt.BCrypt
 import scalikejdbc._
 
@@ -38,3 +41,34 @@ object Account extends SQLSyntaxSupport[Account] {
   }
 
 }
+
+trait Accounts {
+  def authenticate(email: String, password: String): Option[Account]
+  def findByEmail(email: String): Option[Account]
+  def findById(id: Int): Option[Account]
+  def findAll(): Seq[Account]
+  def create(account: Account): Unit
+}
+
+@Singleton
+class AccountFixtures @Inject()(implicit s: DBSession) extends Accounts {
+
+  // Fixtures
+  Seq(
+    Account(1, "alice@example.com", "secret", "Alice", Administrator),
+    Account(2, "bob@example.com",   "secret", "Bob",   NormalUser),
+    Account(3, "chris@example.com", "secret", "Chris", NormalUser)
+  ) foreach Account.create
+
+  override def authenticate(email: String, password: String): Option[Account] =
+    Account.authenticate(email, password)
+
+  override def findById(id: Int): Option[Account] = Account.findById(id)
+
+  override def findAll(): Seq[Account] = Account.findAll()
+
+  override def findByEmail(email: String): Option[Account] = Account.findByEmail(email)
+
+  override def create(account: Account): Unit = Account.create(account)
+}
+

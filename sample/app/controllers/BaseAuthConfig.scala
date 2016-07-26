@@ -1,19 +1,20 @@
 package controllers
 
-import jp.t2v.lab.play2.auth.{AuthenticityToken, AsyncIdContainer, AuthConfig}
-import jp.t2v.lab.play2.auth.sample.{Role, Account}
+import jp.t2v.lab.play2.auth.{AsyncIdContainer, AuthConfig, AuthenticityToken}
+import jp.t2v.lab.play2.auth.sample.{Account, Accounts, Role}
 import jp.t2v.lab.play2.auth.sample.Role._
 import play.api.mvc.RequestHeader
 import play.api.mvc.Results._
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect._
 import play.Logger
+
 import scala.collection.concurrent.TrieMap
 import scala.util.Random
 import java.security.SecureRandom
+
 import scala.annotation.tailrec
-import play.api.cache.Cache
 
 trait BaseAuthConfig  extends AuthConfig {
 
@@ -21,10 +22,12 @@ trait BaseAuthConfig  extends AuthConfig {
   type User = Account
   type Authority = Role
 
+  def accounts: Accounts
+
   val idTag: ClassTag[Id] = classTag[Id]
   val sessionTimeoutInSeconds = 3600
 
-  def resolveUser(id: Id)(implicit ctx: ExecutionContext) = Future.successful(Account.findById(id))
+  def resolveUser(id: Id)(implicit ctx: ExecutionContext) = Future.successful(accounts.findById(id))
   def authorizationFailed(request: RequestHeader)(implicit ctx: ExecutionContext) = throw new AssertionError("don't use")
   override def authorizationFailed(request: RequestHeader, user: User, authority: Option[Authority])(implicit ctx: ExecutionContext) = {
     Logger.info(s"authorizationFailed. userId: ${user.id}, userName: ${user.name}, authority: $authority")

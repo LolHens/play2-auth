@@ -1,10 +1,9 @@
 package jp.t2v.lab.play2.auth
 
 import play.api.{ Environment, Mode }
-import play.api.cache.CacheApi
 import play.api.mvc._
 
-import scala.reflect.{ ClassTag, classTag }
+import scala.reflect.ClassTag
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait AuthConfig {

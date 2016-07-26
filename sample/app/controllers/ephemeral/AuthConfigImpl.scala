@@ -17,7 +17,7 @@ trait AuthConfigImpl extends BaseAuthConfig {
 
   override lazy val tokenAccessor: TokenAccessor = new CookieTokenAccessor(
     cookieName = "PLAY2AUTH_SESS_ID",
-    cookieSecureOption = play.api.Play.isProd(play.api.Play.current),
+    cookieSecureOption = environment.mode == play.api.Mode.Prod,
     cookieHttpOnlyOption = true,
     cookieDomainOption = None,
     cookiePathOption = "/",

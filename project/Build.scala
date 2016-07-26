@@ -9,7 +9,7 @@ object ApplicationBuild extends Build {
   val playVersion = play.core.PlayVersion.current
 
   lazy val baseSettings = Seq(
-    version            := "0.14.2",
+    version            := "0.15.0-SNAPSHOT",
     scalaVersion       := "2.11.8",
     crossScalaVersions := Seq("2.10.5", "2.11.8"),
     organization       := "jp.t2v",
@@ -71,6 +71,7 @@ object ApplicationBuild extends Build {
     .settings(
       baseSettings,
       libraryDependencies += "com.typesafe.play"  %% "play-test"   % playVersion,
+      libraryDependencies += "com.h2database" % "h2" % "1.4.192",
       name                    := appName + "-test",
       publishMavenStyle       := appPublishMavenStyle,
       publishArtifact in Test := appPublishArtifactInTest,
@@ -87,6 +88,7 @@ object ApplicationBuild extends Build {
       libraryDependencies += play.sbt.Play.autoImport.cache,
       libraryDependencies += play.sbt.Play.autoImport.specs2 % Test,
       libraryDependencies += play.sbt.Play.autoImport.jdbc,
+      libraryDependencies += play.sbt.Play.autoImport.guiceSupport,
       libraryDependencies += "org.mindrot"           % "jbcrypt"                           % "0.3m",
       libraryDependencies += "org.scalikejdbc"      %% "scalikejdbc"                       % "2.2.7",
       libraryDependencies += "org.scalikejdbc"      %% "scalikejdbc-config"                % "2.2.7",
@@ -94,8 +96,8 @@ object ApplicationBuild extends Build {
       libraryDependencies += "org.scalikejdbc"      %% "scalikejdbc-test"                  % "2.2.7"   % "test",
       libraryDependencies += "org.scalikejdbc"      %% "scalikejdbc-play-initializer"      % "2.4.0",
       libraryDependencies += "org.scalikejdbc"      %% "scalikejdbc-play-dbapi-adapter"    % "2.4.0",
-      libraryDependencies += "org.scalikejdbc"      %% "scalikejdbc-play-fixture"          % "2.4.0",
-      libraryDependencies += "org.flywaydb"         %% "flyway-play"                       % "2.0.1",
+      libraryDependencies += "org.scalikejdbc"      %% "scalikejdbc-play-fixture"          % "2.4.4",
+      libraryDependencies += "org.flywaydb"         %% "flyway-play"                       % "3.0.1",
       TwirlKeys.templateImports in Compile ++= Seq(
         "jp.t2v.lab.play2.auth.sample._",
         "play.api.data.Form",
@@ -136,7 +138,7 @@ object ApplicationBuild extends Build {
       libraryDependencies ++= Seq(
         "com.typesafe.play" %% "play-ws"                           % playVersion,
         "com.typesafe.play" %% "play-cache"                        % playVersion,
-        "org.flywaydb"      %% "flyway-play"                       % "2.0.1",
+        "org.flywaydb"      %% "flyway-play"                       % "3.0.1",
         "org.scalikejdbc"   %% "scalikejdbc"                       % "2.2.7",
         "org.scalikejdbc"   %% "scalikejdbc-config"                % "2.2.7",
         "org.scalikejdbc"   %% "scalikejdbc-syntax-support-macro"  % "2.2.7",
