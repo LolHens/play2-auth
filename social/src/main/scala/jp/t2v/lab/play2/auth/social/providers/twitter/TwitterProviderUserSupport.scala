@@ -2,11 +2,10 @@ package jp.t2v.lab.play2.auth.social.providers.twitter
 
 import jp.t2v.lab.play2.auth.social.core.OAuthProviderUserSupport
 import play.api.Logger
-import play.api.Play.current
-import play.api.libs.oauth.{ OAuthCalculator, RequestToken }
-import play.api.libs.ws.{ WS, WSResponse }
+import play.api.libs.oauth.{OAuthCalculator, RequestToken}
+import play.api.libs.ws.WSResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait TwitterProviderUserSupport extends OAuthProviderUserSupport {
   self: TwitterController =>
@@ -28,7 +27,7 @@ trait TwitterProviderUserSupport extends OAuthProviderUserSupport {
 
   def retrieveProviderUser(accessToken: AccessToken)(implicit ctx: ExecutionContext): Future[ProviderUser] = {
     for {
-      response <- WS.url("https://api.twitter.com/1.1/account/verify_credentials.json")
+      response <- ws.url("https://api.twitter.com/1.1/account/verify_credentials.json")
         .sign(OAuthCalculator(authenticator.consumerKey, RequestToken(accessToken.token, accessToken.secret))).get()
     } yield {
       Logger(getClass).debug("Retrieving user info from Twitter API: " + response.body)

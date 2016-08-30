@@ -1,18 +1,19 @@
 package jp.t2v.lab.play2.auth.social.providers.github
 
 import java.net.URLEncoder
+import javax.inject.{Inject, Singleton}
 
-import jp.t2v.lab.play2.auth.social.core.{ AccessTokenRetrievalFailedException, OAuth2Authenticator }
-import play.api.Logger
-import play.api.Play.current
-import play.api.http.{ HeaderNames, MimeTypes }
-import play.api.libs.ws.{ WS, WSResponse }
+import jp.t2v.lab.play2.auth.social.core.{AccessTokenRetrievalFailedException, OAuth2Authenticator}
+import play.api.{Configuration, Logger}
+import play.api.http.{HeaderNames, MimeTypes}
+import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc.Results
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
-class GitHubAuthenticator extends OAuth2Authenticator {
+@Singleton
+class GitHubAuthenticator @Inject()(val ws: WSClient, config: Configuration) extends OAuth2Authenticator {
 
   type AccessToken = String
 
@@ -22,14 +23,14 @@ class GitHubAuthenticator extends OAuth2Authenticator {
 
   val authorizationUrl = "https://github.com/login/oauth/authorize"
 
-  lazy val clientId = current.configuration.getString("github.clientId").getOrElse(sys.error("github.clientId is missing"))
+  lazy val clientId = config.get[String]("github.clientId")
 
-  lazy val clientSecret = current.configuration.getString("github.clientSecret").getOrElse(sys.error("github.clientSecret is missing"))
+  lazy val clientSecret = config.get[String]("github.clientSecret")
 
-  lazy val callbackUrl = current.configuration.getString("github.callbackURL").getOrElse(sys.error("github.callbackURL is missing"))
+  lazy val callbackUrl = config.get[String]("github.callbackURL")
 
   def retrieveAccessToken(code: String)(implicit ctx: ExecutionContext): Future[AccessToken] = {
-    WS.url(accessTokenUrl)
+    ws.url(accessTokenUrl)
       .withQueryString(
         "client_id" -> clientId,
         "client_secret" -> clientSecret,

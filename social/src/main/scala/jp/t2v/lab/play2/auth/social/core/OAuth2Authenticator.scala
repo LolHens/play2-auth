@@ -1,8 +1,8 @@
 package jp.t2v.lab.play2.auth.social.core
 
-import play.api.libs.ws.WSResponse
+import play.api.libs.ws.{WSClient, WSResponse}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait OAuth2Authenticator extends OAuthAuthenticator {
 
@@ -23,5 +23,7 @@ trait OAuth2Authenticator extends OAuthAuthenticator {
   def getAuthorizationUrl(scope: String, state: String): String
 
   def parseAccessTokenResponse(response: WSResponse): String
+
+  def ws: WSClient
 
 }

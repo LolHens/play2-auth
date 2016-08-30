@@ -2,16 +2,20 @@ package jp.t2v.lab.play2.auth.social.core
 
 import java.util.UUID
 
-import jp.t2v.lab.play2.auth.{ AuthConfig, OptionalAuthElement }
+import jp.t2v.lab.play2.auth.{AuthConfig, OptionalAuthElement}
 import play.api._
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.ws.WSClient
 import play.api.mvc._
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal
 
 trait OAuth2Controller extends Controller with OAuthController { self: OptionalAuthElement with AuthConfig =>
+
+  protected def ws: WSClient
+  protected def config: Configuration
 
   protected val authenticator: OAuth2Authenticator
 
@@ -55,7 +59,7 @@ trait OAuth2Controller extends Controller with OAuthController { self: OptionalA
     val form = Form(
       tuple(
         "code"  -> nonEmptyText,
-        "state" -> nonEmptyText.verifying(s => request.session.get(OAuth2StateKey).exists(_ == s))
+        "state" -> nonEmptyText.verifying(s => request.session.get(OAuth2StateKey).contains(s))
       )
     )
 

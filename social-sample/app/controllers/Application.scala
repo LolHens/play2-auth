@@ -8,17 +8,19 @@ import play.api.mvc._
 import scalikejdbc.DB
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.reflect.{ ClassTag, classTag }
+import scala.concurrent.{ExecutionContext, Future}
+import scala.reflect.{ClassTag, classTag}
 import jp.t2v.lab.play2.auth._
-import jp.t2v.lab.play2.auth.social.providers.twitter.{ TwitterController, TwitterProviderUserSupport }
-import jp.t2v.lab.play2.auth.social.providers.facebook.{ FacebookController, FacebookProviderUserSupport }
-import jp.t2v.lab.play2.auth.social.providers.github.{ GitHubController, GitHubProviderUserSupport }
+import jp.t2v.lab.play2.auth.social.providers.twitter.{TwitterController, TwitterProviderUserSupport}
+import jp.t2v.lab.play2.auth.social.providers.facebook.{FacebookController, FacebookProviderUserSupport}
+import jp.t2v.lab.play2.auth.social.providers.github.{GitHubController, GitHubProviderUserSupport}
 import jp.t2v.lab.play2.auth.social.providers.slack.SlackController
-import play.api.Environment
+import play.api.{Configuration, Environment}
 import play.api.cache.SyncCacheApi
+import play.api.libs.crypto.CookieSigner
+import play.api.libs.ws.WSClient
 
-class Application @Inject() (val environment: Environment, val cacheApi: SyncCacheApi) extends Controller with OptionalAuthElement with AuthConfigImpl with Logout {
+class Application @Inject() (val environment: Environment, val cacheApi: SyncCacheApi, val signer: CookieSigner) extends Controller with OptionalAuthElement with AuthConfigImpl with Logout {
 
   def index = StackAction { implicit request =>
     DB.readOnly { implicit session =>
@@ -71,7 +73,10 @@ trait AuthConfigImpl extends AuthConfig {
 
 }
 
-class FacebookAuthController @Inject() (val environment: Environment, val cacheApi: SyncCacheApi) extends FacebookController
+class FacebookAuthController @Inject() (val environment: Environment, val cacheApi: SyncCacheApi,
+                                        val signer: CookieSigner,
+                                        val ws: WSClient,
+                                        val config: Configuration) extends FacebookController
     with AuthConfigImpl
     with FacebookProviderUserSupport {
 
@@ -101,7 +106,12 @@ class FacebookAuthController @Inject() (val environment: Environment, val cacheA
 
 }
 
-class GitHubAuthController @Inject() (val environment: Environment, val cacheApi: SyncCacheApi) extends GitHubController
+class GitHubAuthController @Inject() (val environment: Environment, val cacheApi: SyncCacheApi,
+                                      val signer: CookieSigner,
+                                      val ws: WSClient,
+                                      val config: Configuration)
+  extends
+  GitHubController
     with AuthConfigImpl
     with GitHubProviderUserSupport {
 
@@ -131,7 +141,10 @@ class GitHubAuthController @Inject() (val environment: Environment, val cacheApi
 
 }
 
-class TwitterAuthController @Inject() (val environment: Environment, val cacheApi: SyncCacheApi) extends TwitterController
+class TwitterAuthController @Inject() (val environment: Environment, val cacheApi: SyncCacheApi,
+                                       val signer: CookieSigner,
+                                       val ws: WSClient,
+                                       val config: Configuration) extends TwitterController
     with AuthConfigImpl
     with TwitterProviderUserSupport {
 
@@ -161,7 +174,10 @@ class TwitterAuthController @Inject() (val environment: Environment, val cacheAp
 
 }
 
-class SlackAuthController @Inject() (val environment: Environment, val cacheApi: SyncCacheApi) extends SlackController
+class SlackAuthController @Inject() (val environment: Environment, val cacheApi: SyncCacheApi,
+                                     val signer: CookieSigner,
+                                     val ws: WSClient,
+                                     val config: Configuration) extends SlackController
     with AuthConfigImpl {
 
   override def onOAuthLinkSucceeded(accessToken: AccessToken, consumerUser: User)(implicit request: RequestHeader, ctx: ExecutionContext): Future[Result] = {

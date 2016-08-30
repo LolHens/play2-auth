@@ -1,18 +1,19 @@
 package jp.t2v.lab.play2.auth.social.providers.facebook
 
 import java.net.URLEncoder
+import javax.inject.{Inject, Singleton}
 
-import jp.t2v.lab.play2.auth.social.core.{ AccessTokenRetrievalFailedException, OAuth2Authenticator }
-import play.api.Logger
-import play.api.Play.current
-import play.api.http.{ HeaderNames, MimeTypes }
-import play.api.libs.ws.{ WS, WSResponse }
+import jp.t2v.lab.play2.auth.social.core.{AccessTokenRetrievalFailedException, OAuth2Authenticator}
+import play.api.{Configuration, Logger}
+import play.api.http.{HeaderNames, MimeTypes}
+import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc.Results
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
-class FacebookAuthenticator extends OAuth2Authenticator {
+@Singleton
+class FacebookAuthenticator @Inject()(val ws: WSClient, config: Configuration) extends OAuth2Authenticator {
 
   type AccessToken = String
 
@@ -22,14 +23,14 @@ class FacebookAuthenticator extends OAuth2Authenticator {
 
   val authorizationUrl = "https://graph.facebook.com/oauth/authorize"
 
-  lazy val clientId = current.configuration.getString("facebook.clientId").getOrElse(sys.error("facebook.clientId is missing"))
+  lazy val clientId = config.get[String]("facebook.clientId")
 
-  lazy val clientSecret = current.configuration.getString("facebook.clientSecret").getOrElse(sys.error("facebook.clientSecret is missing"))
+  lazy val clientSecret = config.get[String]("facebook.clientSecret")
 
-  lazy val callbackUrl = current.configuration.getString("facebook.callbackURL").getOrElse(sys.error("facebook.callbackURL is missing"))
+  lazy val callbackUrl = config.get[String]("facebook.callbackURL")
 
   def retrieveAccessToken(code: String)(implicit ctx: ExecutionContext): Future[AccessToken] = {
-    WS.url(accessTokenUrl)
+    ws.url(accessTokenUrl)
       .withQueryString(
         "client_id" -> clientId,
         "client_secret" -> clientSecret,

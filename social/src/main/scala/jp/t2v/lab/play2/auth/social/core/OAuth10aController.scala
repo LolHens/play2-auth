@@ -1,10 +1,11 @@
 package jp.t2v.lab.play2.auth.social.core
 
-import jp.t2v.lab.play2.auth.{ AuthConfig, OptionalAuthElement }
+import jp.t2v.lab.play2.auth.{AuthConfig, OptionalAuthElement}
 import play.api._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.oauth._
+import play.api.libs.ws.WSClient
 import play.api.mvc._
 
 import scala.concurrent.Future
@@ -12,6 +13,8 @@ import scala.concurrent.Future
 trait OAuth10aController extends Controller with OAuthController {
   self: OptionalAuthElement with AuthConfig =>
 
+  protected def ws: WSClient
+  protected def config: Configuration
   protected val authenticator: OAuth10aAuthenticator
 
   protected val RequestTokenSecretKey = "play.social.requestTokenSecret"

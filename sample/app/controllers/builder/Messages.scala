@@ -6,6 +6,7 @@ import jp.t2v.lab.play2.auth.AuthActionBuilders
 import jp.t2v.lab.play2.auth.sample.{Account, Accounts}
 import jp.t2v.lab.play2.auth.sample.Role._
 import play.api.Environment
+import play.api.libs.crypto.CookieSigner
 import play.api.mvc._
 import play.twirl.api.Html
 import scalikejdbc.{DB, DBSession}
@@ -24,7 +25,7 @@ object TransactionalAction extends ActionBuilder[TransactionalRequest] {
   }
 }
 
-class Messages @Inject() (val environment: Environment, val accounts: Accounts) extends Controller with AuthActionBuilders with AuthConfigImpl {
+class Messages @Inject() (val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends Controller with AuthActionBuilders with AuthConfigImpl {
 
   type AuthTxRequest[+A] = GenericAuthRequest[A, TransactionalRequest]
   final def AuthorizationTxAction(authority: Authority): ActionBuilder[AuthTxRequest] = composeAuthorizationAction(TransactionalAction)(authority)

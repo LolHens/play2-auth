@@ -31,7 +31,7 @@ trait AsyncAuth {
       Some(user)   <- resolveUser(userId)
       _            <- idContainer.prolongTimeout(token, sessionTimeoutInSeconds)
     } yield {
-      Option(user) -> tokenAccessor.put(token) _
+      Option(user) -> tokenAccessor.put(signer, token) _
     }) getOrElse {
       Future.successful(Option.empty -> identity)
     }
@@ -39,9 +39,9 @@ trait AsyncAuth {
 
   private[auth] def extractToken(request: RequestHeader): Option[AuthenticityToken] = {
     if (environment.mode == Mode.Test) {
-      request.headers.get("PLAY2_AUTH_TEST_TOKEN") orElse tokenAccessor.extract(request)
+      request.headers.get("PLAY2_AUTH_TEST_TOKEN") orElse tokenAccessor.extract(signer, request)
     } else {
-      tokenAccessor.extract(request)
+      tokenAccessor.extract(signer, request)
     }
   }
 

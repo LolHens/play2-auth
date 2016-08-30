@@ -12,8 +12,9 @@ import views.html
 
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.crypto.CookieSigner
 
-class Sessions @Inject() (val environment: Environment, val accounts: Accounts) extends Controller with LoginLogout with AuthConfigImpl {
+class Sessions @Inject() (val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends Controller with LoginLogout with AuthConfigImpl {
 
   val loginForm = Form {
     mapping("email" -> email, "password" -> text)(accounts.authenticate)(_.map(u => (u.email, "")))

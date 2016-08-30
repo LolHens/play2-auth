@@ -88,7 +88,7 @@ object ApplicationBuild extends Build {
       libraryDependencies += play.sbt.Play.autoImport.cache,
       libraryDependencies += play.sbt.Play.autoImport.specs2 % Test,
       libraryDependencies += play.sbt.Play.autoImport.jdbc,
-      libraryDependencies += play.sbt.Play.autoImport.guiceSupport,
+      libraryDependencies += play.sbt.Play.autoImport.guice,
       libraryDependencies += "org.mindrot"           % "jbcrypt"                           % "0.3m",
       libraryDependencies += "org.scalikejdbc"      %% "scalikejdbc"                       % "2.2.7",
       libraryDependencies += "org.scalikejdbc"      %% "scalikejdbc-config"                % "2.2.7",

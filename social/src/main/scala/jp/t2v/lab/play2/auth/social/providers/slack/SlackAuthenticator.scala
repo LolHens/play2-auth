@@ -1,18 +1,19 @@
 package jp.t2v.lab.play2.auth.social.providers.slack
 
 import java.net.URLEncoder
+import javax.inject.{Inject, Singleton}
 
-import jp.t2v.lab.play2.auth.social.core.{ AccessTokenRetrievalFailedException, OAuth2Authenticator }
-import play.api.Logger
-import play.api.http.{ HeaderNames, MimeTypes }
-import play.api.libs.ws.{ WS, WSResponse }
-import play.api.Play.current
+import jp.t2v.lab.play2.auth.social.core.{AccessTokenRetrievalFailedException, OAuth2Authenticator}
+import play.api.{Configuration, Logger}
+import play.api.http.{HeaderNames, MimeTypes}
+import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc.Results
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
-class SlackAuthenticator extends OAuth2Authenticator {
+@Singleton
+class SlackAuthenticator @Inject()(val ws: WSClient, config: Configuration) extends OAuth2Authenticator {
 
   type AccessToken = String
 
@@ -22,11 +23,11 @@ class SlackAuthenticator extends OAuth2Authenticator {
 
   override val accessTokenUrl: String = "https://slack.com/api/oauth.access"
 
-  override val clientId: String = current.configuration.getString("slack.clientId").getOrElse("slack.clientId is missing")
+  override val clientId: String = config.get[String]("slack.clientId")
 
-  override val clientSecret: String = current.configuration.getString("slack.clientSecret").getOrElse("slack.clientSecret is missing")
+  override val clientSecret: String = config.get[String]("slack.clientSecret")
 
-  override val callbackUrl: String = current.configuration.getString("slack.callbackURL").getOrElse("slack.callbackURL is missing")
+  override val callbackUrl: String = config.get[String]("slack.callbackURL")
 
   def getAuthorizationUrl(scope: String, state: String): String = {
     val encodedClientId = URLEncoder.encode(clientId, "utf-8")
@@ -37,7 +38,7 @@ class SlackAuthenticator extends OAuth2Authenticator {
   }
 
   override def retrieveAccessToken(code: String)(implicit ctx: ExecutionContext): Future[AccessToken] = {
-    WS.url(accessTokenUrl)
+    ws.url(accessTokenUrl)
       .withQueryString(
         "client_id" -> clientId,
         "client_secret" -> clientSecret,

@@ -15,7 +15,7 @@ trait Login {
   def gotoLoginSucceeded(userId: Id, result: => Future[Result])(implicit request: RequestHeader, ctx: ExecutionContext): Future[Result] = for {
     token <- idContainer.startNewSession(userId, sessionTimeoutInSeconds)
     r     <- result
-  } yield tokenAccessor.put(token)(r)
+  } yield tokenAccessor.put(signer, token)(r)
 }
 
 trait Logout {
@@ -26,7 +26,7 @@ trait Logout {
   }
 
   def gotoLogoutSucceeded(result: => Future[Result])(implicit request: RequestHeader, ctx: ExecutionContext): Future[Result] = {
-    tokenAccessor.extract(request) foreach idContainer.remove
+    tokenAccessor.extract(signer, request) foreach idContainer.remove
     result.map(tokenAccessor.delete)
   }
 }

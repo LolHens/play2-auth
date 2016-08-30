@@ -1,10 +1,13 @@
 package jp.t2v.lab.play2.auth.social.providers.twitter
 
+import javax.inject.{Inject, Singleton}
+
 import jp.t2v.lab.play2.auth.social.core.OAuth10aAuthenticator
-import play.api.Play.current
+import play.api.Configuration
 import play.api.libs.oauth.ConsumerKey
 
-class TwitterAuthenticator extends OAuth10aAuthenticator {
+@Singleton
+class TwitterAuthenticator @Inject()(config: Configuration) extends OAuth10aAuthenticator {
 
   type AccessToken = TwitterOAuth10aAccessToken
 
@@ -17,13 +20,11 @@ class TwitterAuthenticator extends OAuth10aAuthenticator {
   val authorizationURL = "https://api.twitter.com/oauth/authorize"
 
   lazy val consumerKey = ConsumerKey(
-    current.configuration.getString("twitter.consumerKey").getOrElse(sys.error("twitter.consumerKey is missing")),
-    current.configuration.getString("twitter.consumerSecret").getOrElse(sys.error("twitter.consumerSecret is missing"))
+    config.get[String]("twitter.consumerKey"),
+    config.get[String]("twitter.consumerSecret")
   )
 
-  lazy val callbackURL = current.configuration.getString("twitter.callbackURL").getOrElse(
-    sys.error("twitter.callbackURL is missing")
-  )
+  lazy val callbackURL = config.get[String]("twitter.callbackURL")
 
 }
 
