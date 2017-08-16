@@ -1,14 +1,15 @@
 package jp.t2v.lab.play2.auth
 
-import play.api.mvc.{BaseController, Controller, Result}
 import com.jaroop.play.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
+import play.api.mvc.{BaseController, Result}
 
 import scala.concurrent.Future
 
 trait AuthElement extends StackableController with AsyncAuth {
-    self: BaseController with AuthConfig =>
+  self: BaseController with AuthConfig =>
 
   private[auth] case object AuthKey extends RequestAttributeKey[User]
+
   case object AuthorityKey extends RequestAttributeKey[Authority]
 
   override def proceed[A](req: RequestWithAttributes[A])(f: RequestWithAttributes[A] => Future[Result]): Future[Result] = {
@@ -16,7 +17,7 @@ trait AuthElement extends StackableController with AsyncAuth {
     req.get(AuthorityKey) map { authority =>
       authorized(authority) flatMap {
         case Right((user, resultUpdater)) => super.proceed(req.set(AuthKey, user))(f).map(resultUpdater)
-        case Left(result)                 => Future.successful(result)
+        case Left(result) => Future.successful(result)
       }
     } getOrElse {
       restoreUser collect {
@@ -34,7 +35,7 @@ trait AuthElement extends StackableController with AsyncAuth {
 }
 
 trait OptionalAuthElement extends StackableController with AsyncAuth {
-    self: BaseController with AuthConfig =>
+  self: BaseController with AuthConfig =>
 
   private[auth] case object AuthKey extends RequestAttributeKey[User]
 
@@ -50,7 +51,7 @@ trait OptionalAuthElement extends StackableController with AsyncAuth {
 }
 
 trait AuthenticationElement extends StackableController with AsyncAuth {
-    self: BaseController with AuthConfig =>
+  self: BaseController with AuthConfig =>
 
   private[auth] case object AuthKey extends RequestAttributeKey[User]
 
@@ -60,7 +61,7 @@ trait AuthenticationElement extends StackableController with AsyncAuth {
       case _ => None -> identity[Result] _
     } flatMap {
       case (Some(u), cookieUpdater) => super.proceed(req.set(AuthKey, u))(f).map(cookieUpdater)
-      case (None, _)                => authenticationFailed(req)
+      case (None, _) => authenticationFailed(req)
     }
   }
 

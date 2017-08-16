@@ -1,22 +1,21 @@
 package controllers
 
-import jp.t2v.lab.play2.auth.{AsyncIdContainer, AuthConfig, AuthenticityToken}
-import jp.t2v.lab.play2.auth.sample.{Account, Accounts, Role}
+import java.security.SecureRandom
+
 import jp.t2v.lab.play2.auth.sample.Role._
+import jp.t2v.lab.play2.auth.sample.{Account, Accounts, Role}
+import jp.t2v.lab.play2.auth.{AsyncIdContainer, AuthConfig, AuthenticityToken}
+import play.Logger
 import play.api.mvc.RequestHeader
 import play.api.mvc.Results._
 
+import scala.annotation.tailrec
+import scala.collection.concurrent.TrieMap
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect._
-import play.Logger
-
-import scala.collection.concurrent.TrieMap
 import scala.util.Random
-import java.security.SecureRandom
 
-import scala.annotation.tailrec
-
-trait BaseAuthConfig  extends AuthConfig {
+trait BaseAuthConfig extends AuthConfig {
 
   type Id = Int
   type User = Account
@@ -85,8 +84,8 @@ trait BaseAuthConfig  extends AuthConfig {
     }
 
     private def store(token: AuthenticityToken, userId: Id, timeoutInSeconds: Int) {
-      GlobalMap.container.put(token + tokenSuffix, userId.asInstanceOf[AnyRef]/*, timeoutInSeconds*/) // TODO:
-      GlobalMap.container.put(userId.toString + userIdSuffix, token.asInstanceOf[AnyRef]/*, timeoutInSeconds*/) // TODO:
+      GlobalMap.container.put(token + tokenSuffix, userId.asInstanceOf[AnyRef] /*, timeoutInSeconds*/) // TODO:
+      GlobalMap.container.put(userId.toString + userIdSuffix, token.asInstanceOf[AnyRef] /*, timeoutInSeconds*/) // TODO:
     }
 
     override def prolongTimeout(token: AuthenticityToken, timeoutInSeconds: Int)(implicit request: RequestHeader, context: ExecutionContext): Future[Unit] = {

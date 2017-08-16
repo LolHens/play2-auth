@@ -1,11 +1,9 @@
 package test
 
 import org.specs2.mutable._
-import play.api.test._
-import play.api.test.Helpers._
-import java.io.File
-
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Helpers._
+import play.api.test._
 
 class IntegrationSpec extends Specification {
 
@@ -49,7 +47,7 @@ class IntegrationSpec extends Specification {
       browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
-      browser.pageSource must not contain("Sign in")
+      browser.pageSource must not contain ("Sign in")
       browser.pageSource must contain("logout")
 
       browser.goTo(s"${baseURL}/standard/messages/write")
@@ -61,7 +59,7 @@ class IntegrationSpec extends Specification {
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/standard/messages/write")
-      browser.pageSource must not contain("no permission")
+      browser.pageSource must not contain ("no permission")
 
     }
 
@@ -84,7 +82,7 @@ class IntegrationSpec extends Specification {
       browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
-      browser.pageSource must not contain("Sign in")
+      browser.pageSource must not contain ("Sign in")
       browser.pageSource must contain("logout")
 
       // logout
@@ -106,7 +104,7 @@ class IntegrationSpec extends Specification {
       browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
-      browser.pageSource must not contain("Sign in")
+      browser.pageSource must not contain ("Sign in")
       browser.pageSource must contain("logout")
 
       browser.goTo(s"${baseURL}/builder/messages/write")
@@ -118,7 +116,7 @@ class IntegrationSpec extends Specification {
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/builder/messages/write")
-      browser.pageSource must not contain("no permission")
+      browser.pageSource must not contain ("no permission")
 
     }
 
@@ -135,7 +133,7 @@ class IntegrationSpec extends Specification {
       browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
-      browser.pageSource must not contain("Sign in")
+      browser.pageSource must not contain ("Sign in")
       browser.pageSource must contain("logout")
 
       // submit with token form
@@ -145,11 +143,11 @@ class IntegrationSpec extends Specification {
 
       // submit without token form
       browser.goTo(s"$baseURL/csrf/without_token")
-      browser.pageSource must not contain("Sign in")
+      browser.pageSource must not contain ("Sign in")
       browser.pageSource must contain("logout")
       browser.$("#message").write("testmessage")
       browser.$("#submitbutton").click()
-      browser.pageSource must not contain("testmessage")
+      browser.pageSource must not contain ("testmessage")
 
     }
 
@@ -172,7 +170,7 @@ class IntegrationSpec extends Specification {
       browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
-      browser.pageSource must not contain("Sign in")
+      browser.pageSource must not contain ("Sign in")
       browser.pageSource must contain("logout")
       browser.getCookie("PLAY2AUTH_SESS_ID").getExpiry must beNull
 
@@ -195,7 +193,7 @@ class IntegrationSpec extends Specification {
       browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
-      browser.pageSource must not contain("Sign in")
+      browser.pageSource must not contain ("Sign in")
       browser.pageSource must contain("logout")
       browser.getCookie("PLAY2AUTH_SESS_ID").getExpiry must beNull
 
@@ -208,7 +206,7 @@ class IntegrationSpec extends Specification {
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/ephemeral/messages/write")
-      browser.pageSource must not contain("no permission")
+      browser.pageSource must not contain ("no permission")
 
     }
 
@@ -253,7 +251,7 @@ class IntegrationSpec extends Specification {
       browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
-      browser.pageSource must not contain("Sign in")
+      browser.pageSource must not contain ("Sign in")
       browser.pageSource must contain("logout")
 
       browser.goTo(s"${baseURL}/stateless/messages/write")
@@ -265,7 +263,7 @@ class IntegrationSpec extends Specification {
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/stateless/messages/write")
-      browser.pageSource must not contain("no permission")
+      browser.pageSource must not contain ("no permission")
 
     }
 
@@ -336,7 +334,7 @@ class IntegrationSpec extends Specification {
       browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
-      browser.pageSource must not contain("Sign in")
+      browser.pageSource must not contain ("Sign in")
       browser.pageSource must contain("logout")
 
       browser.goTo(s"${baseURL}/rememberme/messages/write")
@@ -348,7 +346,7 @@ class IntegrationSpec extends Specification {
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/standard/messages/write")
-      browser.pageSource must not contain("no permission")
+      browser.pageSource must not contain ("no permission")
 
     }
 

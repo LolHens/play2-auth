@@ -1,7 +1,7 @@
 package jp.t2v.lab.play2.auth
 
-import play.api.mvc.{Result, RequestHeader}
 import play.api.libs.crypto.CookieSigner
+import play.api.mvc.{RequestHeader, Result}
 
 trait TokenAccessor {
 

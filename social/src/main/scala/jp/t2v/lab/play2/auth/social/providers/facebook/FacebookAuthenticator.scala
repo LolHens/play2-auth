@@ -4,11 +4,9 @@ import java.net.URLEncoder
 import javax.inject.{Inject, Singleton}
 
 import jp.t2v.lab.play2.auth.social.core.{AccessTokenRetrievalFailedException, OAuth2Authenticator}
-import play.api.{Configuration, Logger}
 import play.api.http.{HeaderNames, MimeTypes}
-import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.mvc.Results
-import play.api.libs.ws._
+import play.api.libs.ws.{WSClient, WSResponse, _}
+import play.api.{Configuration, Logger}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal

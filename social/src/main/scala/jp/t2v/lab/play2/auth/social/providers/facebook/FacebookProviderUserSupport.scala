@@ -2,7 +2,7 @@ package jp.t2v.lab.play2.auth.social.providers.facebook
 
 import jp.t2v.lab.play2.auth.social.core.OAuthProviderUserSupport
 import play.api.Logger
-import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.libs.ws.WSResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -25,7 +25,7 @@ trait FacebookProviderUserSupport extends OAuthProviderUserSupport {
   def retrieveProviderUser(accessToken: AccessToken)(implicit ctx: ExecutionContext): Future[ProviderUser] = {
     for {
       response <- ws.url("https://graph.facebook.com/me")
-        .withQueryString(
+        .withQueryStringParameters(
           "access_token" -> accessToken,
           "fields" -> "name,first_name,last_name,picture.type(large),email")
         .get()

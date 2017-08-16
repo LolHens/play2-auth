@@ -28,15 +28,15 @@ object Account extends SQLSyntaxSupport[Account] {
     select.from(Account as a).where.eq(a.id, id)
   }.map(Account(a)).single.apply()
 
-  def findAll()(implicit s: DBSession = auto): Seq[Account] = withSQL { 
-    select.from(Account as a) 
+  def findAll()(implicit s: DBSession = auto): Seq[Account] = withSQL {
+    select.from(Account as a)
   }.map(Account(a)).list.apply()
 
   def create(account: Account)(implicit s: DBSession = auto) {
-    withSQL { 
+    withSQL {
       import account._
       val pass = BCrypt.hashpw(account.password, BCrypt.gensalt())
-      insert.into(Account).values(id, email, pass, name, role.toString) 
+      insert.into(Account).values(id, email, pass, name, role.toString)
     }.update.apply()
   }
 
@@ -56,7 +56,7 @@ class AccountFixtures @Inject()(implicit s: DBSession) extends Accounts {
   // Fixtures
   Seq(
     Account(1, "alice@example.com", "secret", "Alice", Administrator),
-    Account(2, "bob@example.com",   "secret", "Bob",   NormalUser),
+    Account(2, "bob@example.com", "secret", "Bob", NormalUser),
     Account(3, "chris@example.com", "secret", "Chris", NormalUser)
   ) foreach Account.create
 

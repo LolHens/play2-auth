@@ -1,11 +1,11 @@
 package controllers.stateless
 
 import controllers.BaseAuthConfig
+import jp.t2v.lab.play2.auth.{AsyncIdContainer, CookieIdContainer}
 import play.api.mvc.RequestHeader
 import play.api.mvc.Results._
 
-import scala.concurrent.{Future, ExecutionContext}
-import jp.t2v.lab.play2.auth.{CookieIdContainer, AsyncIdContainer}
+import scala.concurrent.{ExecutionContext, Future}
 
 trait AuthConfigImpl extends BaseAuthConfig {
 

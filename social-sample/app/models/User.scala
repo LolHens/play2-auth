@@ -1,40 +1,43 @@
 package models
 
 import jp.t2v.lab.play2.auth.social.providers
-import scalikejdbc._
 import jp.t2v.lab.play2.auth.social.providers.{facebook, twitter}
+import scalikejdbc._
 
 sealed trait Authority
+
 case object Admin extends Authority
+
 case object Normal extends Authority
 
 case class User(id: Long, name: String, avatarUrl: String)
 
 case class GitHubUser(
-  userId: Long,
-  id: Long,
-  login: String,
-  avatarUrl: String,
-  accessToken: String)
+                       userId: Long,
+                       id: Long,
+                       login: String,
+                       avatarUrl: String,
+                       accessToken: String)
 
 case class FacebookUser(
-  userId: Long,
-  id: String,
-  name: String,
-  coverUrl: String,
-  accessToken: String)
+                         userId: Long,
+                         id: String,
+                         name: String,
+                         coverUrl: String,
+                         accessToken: String)
 
 case class TwitterUser(
-  userId: Long,
-  id: Long,
-  screenName: String,
-  profileImageUrl: String,
-  accessToken: String,
-  accessTokenSecret: String)
+                        userId: Long,
+                        id: Long,
+                        screenName: String,
+                        profileImageUrl: String,
+                        accessToken: String,
+                        accessTokenSecret: String)
 
 case class SlackAccessToken(
-  userId: Long,
-  accessToken: String)
+                             userId: Long,
+                             accessToken: String)
+
 object User {
 
   def *(rs: WrappedResultSet) = User(

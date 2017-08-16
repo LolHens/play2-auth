@@ -1,17 +1,16 @@
 package controllers.stack
 
-import com.jaroop.play.stackc.StackableController
+import com.jaroop.play.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
 import controllers.BaseAuthConfig
 import jp.t2v.lab.play2.auth.AuthElement
-import com.jaroop.play.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
-import play.api.mvc.{Controller, InjectedController, Result}
+import play.api.mvc.{InjectedController, Result}
 import play.twirl.api.Html
 import views.html
 
 import scala.concurrent.Future
 
 trait Pjax extends StackableController with AuthElement {
-    self: InjectedController with BaseAuthConfig =>
+  self: InjectedController with BaseAuthConfig =>
 
   type Template = String => Html => Html
 

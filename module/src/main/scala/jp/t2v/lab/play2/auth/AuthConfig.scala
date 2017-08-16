@@ -1,11 +1,11 @@
 package jp.t2v.lab.play2.auth
 
 import play.api.libs.crypto.CookieSigner
-import play.api.{Environment, Mode}
 import play.api.mvc._
+import play.api.{Environment, Mode}
 
-import scala.reflect.ClassTag
 import scala.concurrent.{ExecutionContext, Future}
+import scala.reflect.ClassTag
 
 trait AuthConfig {
 

@@ -12,7 +12,8 @@ import play.api.mvc._
 import scala.concurrent.Future
 import scala.util.control.NonFatal
 
-trait OAuth2Controller extends BaseController with OAuthController { self: OptionalAuthElement with AuthConfig =>
+trait OAuth2Controller extends BaseController with OAuthController {
+  self: OptionalAuthElement with AuthConfig =>
 
   protected def ws: WSClient
   protected def config: Configuration
@@ -58,7 +59,7 @@ trait OAuth2Controller extends BaseController with OAuthController { self: Optio
     implicit val ec = StackActionExecutionContext
     val form = Form(
       tuple(
-        "code"  -> nonEmptyText,
+        "code" -> nonEmptyText,
         "state" -> nonEmptyText.verifying(s => request.session.get(OAuth2StateKey).contains(s))
       )
     )
@@ -69,11 +70,11 @@ trait OAuth2Controller extends BaseController with OAuthController { self: Optio
       case (code, _) =>
         val action: AccessToken => Future[Result] = loggedIn match {
           case Some(consumerUser) => onOAuthLinkSucceeded(_, consumerUser)
-          case None               => onOAuthLoginSucceeded
+          case None => onOAuthLoginSucceeded
         }
 
         (for {
-          token  <- authenticator.retrieveAccessToken(code)
+          token <- authenticator.retrieveAccessToken(code)
           result <- action(token)
         } yield result).recover {
           case NonFatal(e) =>

@@ -77,7 +77,8 @@ trait AuthConfigImpl extends AuthConfig {
 class FacebookAuthController @Inject()(val environment: Environment, val cacheApi: SyncCacheApi,
                                        val signer: CookieSigner,
                                        val ws: WSClient,
-                                       val config: Configuration) extends InjectedController
+                                       val config: Configuration,
+                                       val OAuthExecutionContext: ExecutionContext) extends InjectedController
   with FacebookController
   with AuthConfigImpl
   with FacebookProviderUserSupport {
@@ -111,7 +112,8 @@ class FacebookAuthController @Inject()(val environment: Environment, val cacheAp
 class GitHubAuthController @Inject()(val environment: Environment, val cacheApi: SyncCacheApi,
                                      val signer: CookieSigner,
                                      val ws: WSClient,
-                                     val config: Configuration)
+                                     val config: Configuration,
+                                     val OAuthExecutionContext: ExecutionContext)
   extends
     InjectedController
     with GitHubController
@@ -147,7 +149,8 @@ class GitHubAuthController @Inject()(val environment: Environment, val cacheApi:
 class TwitterAuthController @Inject()(val environment: Environment, val cacheApi: SyncCacheApi,
                                       val signer: CookieSigner,
                                       val ws: WSClient,
-                                      val config: Configuration) extends InjectedController
+                                      val config: Configuration,
+                                      val OAuthExecutionContext: ExecutionContext) extends InjectedController
   with TwitterController
   with AuthConfigImpl
   with TwitterProviderUserSupport {
@@ -181,7 +184,8 @@ class TwitterAuthController @Inject()(val environment: Environment, val cacheApi
 class SlackAuthController @Inject()(val environment: Environment, val cacheApi: SyncCacheApi,
                                     val signer: CookieSigner,
                                     val ws: WSClient,
-                                    val config: Configuration) extends InjectedController
+                                    val config: Configuration,
+                                    val OAuthExecutionContext: ExecutionContext) extends InjectedController
   with SlackController
   with AuthConfigImpl {
 

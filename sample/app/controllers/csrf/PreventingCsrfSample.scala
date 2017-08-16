@@ -10,9 +10,9 @@ import play.api.Environment
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.crypto.CookieSigner
-import play.api.mvc.{Controller, InjectedController}
+import play.api.mvc.InjectedController
 
-class PreventingCsrfSample @Inject() (val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends InjectedController with TokenValidateElement with AuthElement with AuthConfigImpl {
+class PreventingCsrfSample @Inject()(val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends InjectedController with TokenValidateElement with AuthElement with AuthConfigImpl {
 
   def formWithToken = StackAction(AuthorityKey -> NormalUser, IgnoreTokenValidation -> true) { implicit req =>
     Ok(views.html.csrf.formWithToken())
@@ -22,11 +22,13 @@ class PreventingCsrfSample @Inject() (val environment: Environment, val accounts
     Ok(views.html.csrf.formWithoutToken())
   }
 
-  val form = Form { single("message" -> text) }
+  val form = Form {
+    single("message" -> text)
+  }
 
   def submitTarget = StackAction(AuthorityKey -> NormalUser) { implicit req =>
     form.bindFromRequest.fold(
-      _       => throw new Exception,
+      _ => throw new Exception,
       message => Ok(message).as("text/plain")
     )
   }

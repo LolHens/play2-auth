@@ -1,9 +1,10 @@
 package controllers.basic
 
-import jp.t2v.lab.play2.auth.{AuthenticityToken, AsyncIdContainer}
-import play.api.mvc.RequestHeader
-import scala.concurrent.{Future, ExecutionContext}
 import jp.t2v.lab.play2.auth.sample.Account
+import jp.t2v.lab.play2.auth.{AsyncIdContainer, AuthenticityToken}
+import play.api.mvc.RequestHeader
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class BasicAuthIdContainer extends AsyncIdContainer[Account] {
   override def prolongTimeout(token: AuthenticityToken, timeoutInSeconds: Int)(implicit request: RequestHeader, context: ExecutionContext): Future[Unit] = {

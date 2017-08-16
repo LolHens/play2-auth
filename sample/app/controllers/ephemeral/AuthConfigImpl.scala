@@ -5,7 +5,7 @@ import jp.t2v.lab.play2.auth.{CookieTokenAccessor, TokenAccessor}
 import play.api.mvc.RequestHeader
 import play.api.mvc.Results._
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.{ExecutionContext, Future}
 
 trait AuthConfigImpl extends BaseAuthConfig {
 

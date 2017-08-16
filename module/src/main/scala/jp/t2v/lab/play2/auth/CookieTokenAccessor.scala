@@ -4,13 +4,13 @@ import play.api.libs.crypto.CookieSigner
 import play.api.mvc.{Cookie, DiscardingCookie, RequestHeader, Result}
 
 class CookieTokenAccessor(
-    protected val cookieName: String = "PLAY2AUTH_SESS_ID",
-    protected val cookieSecureOption: Boolean = false,
-    protected val cookieHttpOnlyOption: Boolean = true,
-    protected val cookieDomainOption: Option[String] = None,
-    protected val cookiePathOption: String = "/",
-    protected val cookieMaxAge: Option[Int] = None
-) extends TokenAccessor {
+                           protected val cookieName: String = "PLAY2AUTH_SESS_ID",
+                           protected val cookieSecureOption: Boolean = false,
+                           protected val cookieHttpOnlyOption: Boolean = true,
+                           protected val cookieDomainOption: Option[String] = None,
+                           protected val cookiePathOption: String = "/",
+                           protected val cookieMaxAge: Option[Int] = None
+                         ) extends TokenAccessor {
 
   def put(signer: CookieSigner, token: AuthenticityToken)(result: Result)(implicit request: RequestHeader): Result = {
     val c = Cookie(cookieName, sign(signer, token), cookieMaxAge, cookiePathOption, cookieDomainOption,

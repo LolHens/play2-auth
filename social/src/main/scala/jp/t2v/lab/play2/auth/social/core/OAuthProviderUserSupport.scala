@@ -1,9 +1,9 @@
 package jp.t2v.lab.play2.auth.social.core
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait OAuthProviderUserSupport {
-    self: OAuthController =>
+  self: OAuthController =>
 
   type ProviderUser
 

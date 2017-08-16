@@ -3,10 +3,10 @@ package jp.t2v.lab.play2.auth.social.providers.github
 import jp.t2v.lab.play2.auth.social.core.OAuthProviderUserSupport
 import play.api.libs.ws.WSResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait GitHubProviderUserSupport extends OAuthProviderUserSupport {
-    self: GitHubController =>
+  self: GitHubController =>
 
   type ProviderUser = GitHubUser
 
@@ -22,7 +22,7 @@ trait GitHubProviderUserSupport extends OAuthProviderUserSupport {
 
   def retrieveProviderUser(accessToken: String)(implicit ctx: ExecutionContext): Future[ProviderUser] = {
     for {
-      response <- ws.url("https://api.github.com/user").withHeaders("Authorization" -> s"token $accessToken").get()
+      response <- ws.url("https://api.github.com/user").withHttpHeaders("Authorization" -> s"token $accessToken").get()
     } yield {
       readProviderUser(accessToken, response)
     }

@@ -3,10 +3,10 @@ package jp.t2v.lab.play2.auth
 import play.api.Mode
 import play.api.mvc._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait AsyncAuth {
-    self: AuthConfig with BaseController =>
+  self: AuthConfig with BaseController =>
 
   def authorized(authority: Authority)(implicit request: RequestHeader, context: ExecutionContext): Future[Either[Result, (User, ResultUpdater)]] = {
     restoreUser collect {
@@ -25,11 +25,11 @@ trait AsyncAuth {
 
   private[auth] def restoreUser(implicit request: RequestHeader, context: ExecutionContext): Future[(Option[User], ResultUpdater)] = {
     (for {
-      token  <- extractToken(request)
+      token <- extractToken(request)
     } yield for {
       Some(userId) <- idContainer.get(token)
-      Some(user)   <- resolveUser(userId)
-      _            <- idContainer.prolongTimeout(token, sessionTimeoutInSeconds)
+      Some(user) <- resolveUser(userId)
+      _ <- idContainer.prolongTimeout(token, sessionTimeoutInSeconds)
     } yield {
       Option(user) -> tokenAccessor.put(signer, token) _
     }) getOrElse {

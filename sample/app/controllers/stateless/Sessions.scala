@@ -3,18 +3,17 @@ package controllers.stateless
 import javax.inject.Inject
 
 import jp.t2v.lab.play2.auth.LoginLogout
-import jp.t2v.lab.play2.auth.sample.{Account, Accounts}
+import jp.t2v.lab.play2.auth.sample.Accounts
 import play.api.Environment
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.{Action, Controller, InjectedController}
+import play.api.libs.crypto.CookieSigner
+import play.api.mvc.InjectedController
 import views.html
 
-import scala.concurrent.Future
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.crypto.CookieSigner
+import scala.concurrent.{ExecutionContext, Future}
 
-class Sessions @Inject() (val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends InjectedController with LoginLogout with AuthConfigImpl {
+class Sessions @Inject()(val environment: Environment, val accounts: Accounts, val signer: CookieSigner)(implicit val executionContext: ExecutionContext) extends InjectedController with LoginLogout with AuthConfigImpl {
 
   val loginForm = Form {
     mapping("email" -> email, "password" -> text)(accounts.authenticate)(_.map(u => (u.email, "")))
@@ -34,7 +33,7 @@ class Sessions @Inject() (val environment: Environment, val accounts: Accounts, 
   def authenticate = Action.async { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(html.stateless.login(formWithErrors))),
-      user           => gotoLoginSucceeded(user.get.id)
+      user => gotoLoginSucceeded(user.get.id)
     )
   }
 

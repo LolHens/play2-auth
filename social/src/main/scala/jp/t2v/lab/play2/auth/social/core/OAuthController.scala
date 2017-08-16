@@ -6,7 +6,8 @@ import play.api.mvc.{RequestHeader, Result}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait OAuthController { self: OptionalAuthElement with AuthConfig =>
+trait OAuthController {
+  self: OptionalAuthElement with AuthConfig =>
 
   protected def ws: WSClient
 
@@ -18,6 +19,6 @@ trait OAuthController { self: OptionalAuthElement with AuthConfig =>
 
   def onOAuthLinkSucceeded(token: AccessToken, consumerUser: User)(implicit request: RequestHeader, ctx: ExecutionContext): Future[Result]
 
-  protected lazy val OAuthExecutionContext: ExecutionContext = play.api.libs.concurrent.Execution.defaultContext
+  protected def OAuthExecutionContext: ExecutionContext
 
 }

@@ -58,9 +58,9 @@ trait OAuth10aController extends BaseController with OAuthController {
     implicit val ec = StackActionExecutionContext
     val form = Form(
       tuple(
-        "oauth_token"    -> optional(nonEmptyText),
+        "oauth_token" -> optional(nonEmptyText),
         "oauth_verifier" -> optional(nonEmptyText),
-        "denied"         -> optional(nonEmptyText)
+        "denied" -> optional(nonEmptyText)
       )
     )
 
@@ -70,12 +70,12 @@ trait OAuth10aController extends BaseController with OAuthController {
       case (Some(oauthToken), Some(oauthVerifier), None) =>
         val action: AccessToken => Future[Result] = loggedIn match {
           case Some(consumerUser) => onOAuthLinkSucceeded(_, consumerUser)
-          case None               => onOAuthLoginSucceeded
+          case None => onOAuthLoginSucceeded
         }
         (for {
-          tokenSecret  <- request.session.get(RequestTokenSecretKey)
+          tokenSecret <- request.session.get(RequestTokenSecretKey)
           requestToken = RequestToken(oauthToken, tokenSecret)
-          token        <- authenticator.oauth.retrieveAccessToken(requestToken, oauthVerifier).right.toOption
+          token <- authenticator.oauth.retrieveAccessToken(requestToken, oauthVerifier).right.toOption
         } yield {
           action(requestTokenToAccessToken(token))
         }).getOrElse(Future.successful(BadRequest))

@@ -1,11 +1,11 @@
 package controllers.basic
 
-import jp.t2v.lab.play2.auth.{AuthenticityToken, TokenAccessor}
-import play.api.mvc.{RequestHeader, Result}
-import org.apache.commons.codec.binary.Base64
 import java.nio.charset.Charset
 
+import jp.t2v.lab.play2.auth.{AuthenticityToken, TokenAccessor}
+import org.apache.commons.codec.binary.Base64
 import play.api.libs.crypto.CookieSigner
+import play.api.mvc.{RequestHeader, Result}
 
 class BasicAuthTokenAccessor extends TokenAccessor {
 

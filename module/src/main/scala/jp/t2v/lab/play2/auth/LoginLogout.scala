@@ -1,9 +1,8 @@
 package jp.t2v.lab.play2.auth
 
 import play.api.mvc._
-import play.api.mvc.Cookie
-import play.api.libs.Crypto
-import scala.concurrent.{Future, ExecutionContext}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 trait Login {
   self: BaseController with AuthConfig =>
@@ -14,7 +13,7 @@ trait Login {
 
   def gotoLoginSucceeded(userId: Id, result: => Future[Result])(implicit request: RequestHeader, ctx: ExecutionContext): Future[Result] = for {
     token <- idContainer.startNewSession(userId, sessionTimeoutInSeconds)
-    r     <- result
+    r <- result
   } yield tokenAccessor.put(signer, token)(r)
 }
 

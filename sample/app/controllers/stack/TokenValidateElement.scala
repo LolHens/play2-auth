@@ -1,17 +1,17 @@
 package controllers.stack
 
-import com.jaroop.play.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
-
-import scala.concurrent.Future
-import play.api.mvc.{Controller, InjectedController, Request, Result}
-import play.api.data._
-import play.api.data.Forms._
-
-import scala.util.Random
 import java.security.SecureRandom
 
+import com.jaroop.play.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
+import play.api.data.Forms._
+import play.api.data._
+import play.api.mvc.{InjectedController, Request, Result}
+
+import scala.concurrent.Future
+import scala.util.Random
+
 trait TokenValidateElement extends StackableController {
-    self: InjectedController =>
+  self: InjectedController =>
 
   private val PreventingCsrfTokenSessionKey = "preventingCsrfToken"
 
@@ -25,10 +25,11 @@ trait TokenValidateElement extends StackableController {
   }
 
   case object PreventingCsrfTokenKey extends RequestAttributeKey[PreventingCsrfToken]
+
   case object IgnoreTokenValidation extends RequestAttributeKey[Boolean]
 
   private def validateToken(request: Request[_]): Boolean = (for {
-    tokenInForm    <- tokenForm.bindFromRequest()(request).value
+    tokenInForm <- tokenForm.bindFromRequest()(request).value
     tokenInSession <- request.session.get(PreventingCsrfTokenSessionKey)
   } yield tokenInForm == tokenInSession) getOrElse false
 

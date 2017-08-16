@@ -5,9 +5,9 @@ import jp.t2v.lab.play2.auth.{AuthConfig, Login, OptionalAuthElement}
 import play.api.libs.oauth.RequestToken
 
 trait TwitterController extends OAuth10aController
-    with AuthConfig
-    with OptionalAuthElement
-    with Login {
+  with AuthConfig
+  with OptionalAuthElement
+  with Login {
 
   val authenticator = new TwitterAuthenticator(config)
 

@@ -1,12 +1,12 @@
 package controllers.basic
 
+import jp.t2v.lab.play2.auth.AuthConfig
+import jp.t2v.lab.play2.auth.sample.Role._
+import jp.t2v.lab.play2.auth.sample.{Account, Role}
 import play.api.mvc.RequestHeader
 import play.api.mvc.Results._
 
-import scala.concurrent.{Future, ExecutionContext}
-import jp.t2v.lab.play2.auth.AuthConfig
-import jp.t2v.lab.play2.auth.sample.{Role, Account}
-import jp.t2v.lab.play2.auth.sample.Role._
+import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.{ClassTag, classTag}
 
 trait AuthConfigImpl extends AuthConfig {
