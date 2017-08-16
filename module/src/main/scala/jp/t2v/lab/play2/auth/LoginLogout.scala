@@ -6,7 +6,7 @@ import play.api.libs.Crypto
 import scala.concurrent.{Future, ExecutionContext}
 
 trait Login {
-  self: Controller with AuthConfig =>
+  self: BaseController with AuthConfig =>
 
   def gotoLoginSucceeded(userId: Id)(implicit request: RequestHeader, ctx: ExecutionContext): Future[Result] = {
     gotoLoginSucceeded(userId, loginSucceeded(request))
@@ -19,7 +19,7 @@ trait Login {
 }
 
 trait Logout {
-  self: Controller with AuthConfig =>
+  self: BaseController with AuthConfig =>
 
   def gotoLogoutSucceeded(implicit request: RequestHeader, ctx: ExecutionContext): Future[Result] = {
     gotoLogoutSucceeded(logoutSucceeded(request))
@@ -32,5 +32,5 @@ trait Logout {
 }
 
 trait LoginLogout extends Login with Logout {
-  self: Controller with AuthConfig =>
+  self: BaseController with AuthConfig =>
 }

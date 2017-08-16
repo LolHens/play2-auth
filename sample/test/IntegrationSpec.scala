@@ -1,28 +1,29 @@
 package test
 
 import org.specs2.mutable._
-
 import play.api.test._
 import play.api.test.Helpers._
 import java.io.File
+
+import play.api.inject.guice.GuiceApplicationBuilder
 
 class IntegrationSpec extends Specification {
 
   "Standard Sample" should {
 
-    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
       // login failed
       browser.goTo(baseURL)
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secretxxx")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secretxxx")
       browser.$("#loginbutton").click()
       browser.pageSource must contain("Invalid email or password")
 
       // login succeded
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain ("Sign in")
@@ -38,14 +39,14 @@ class IntegrationSpec extends Specification {
 
     }
 
-    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
 
       // login succeded
       browser.goTo(baseURL)
-      browser.$("#email").text("bob@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("bob@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain("Sign in")
@@ -55,8 +56,8 @@ class IntegrationSpec extends Specification {
       browser.pageSource must contain("no permission")
 
       browser.goTo(s"${baseURL}/standard/logout")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/standard/messages/write")
@@ -68,19 +69,19 @@ class IntegrationSpec extends Specification {
 
   "Builder Sample" should {
 
-    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
       // login failed
       browser.goTo(s"${baseURL}/builder/")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secretxxx")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secretxxx")
       browser.$("#loginbutton").click()
       browser.pageSource must contain("Invalid email or password")
 
       // login succeded
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain("Sign in")
@@ -95,14 +96,14 @@ class IntegrationSpec extends Specification {
 
     }
 
-    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
 
       // login succeded
       browser.goTo(s"${baseURL}/builder/")
-      browser.$("#email").text("bob@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("bob@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain("Sign in")
@@ -112,8 +113,8 @@ class IntegrationSpec extends Specification {
       browser.pageSource must contain("no permission")
 
       browser.goTo(s"${baseURL}/builder/logout")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/builder/messages/write")
@@ -125,20 +126,20 @@ class IntegrationSpec extends Specification {
 
   "CSRF Sample" should {
 
-    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
       // login
       browser.goTo(s"${baseURL}/csrf/")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain("Sign in")
       browser.pageSource must contain("logout")
 
       // submit with token form
-      browser.$("#message").text("testmessage")
+      browser.$("#message").write("testmessage")
       browser.$("#submitbutton").click()
       browser.pageSource must contain("testmessage")
 
@@ -146,7 +147,7 @@ class IntegrationSpec extends Specification {
       browser.goTo(s"$baseURL/csrf/without_token")
       browser.pageSource must not contain("Sign in")
       browser.pageSource must contain("logout")
-      browser.$("#message").text("testmessage")
+      browser.$("#message").write("testmessage")
       browser.$("#submitbutton").click()
       browser.pageSource must not contain("testmessage")
 
@@ -156,19 +157,19 @@ class IntegrationSpec extends Specification {
 
   "Ephemeral Sample" should {
 
-    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
       // login failed
       browser.goTo(s"${baseURL}/ephemeral/")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secretxxx")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secretxxx")
       browser.$("#loginbutton").click()
       browser.pageSource must contain("Invalid email or password")
 
       // login succeded
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain("Sign in")
@@ -184,14 +185,14 @@ class IntegrationSpec extends Specification {
 
     }
 
-    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
 
       // login succeded
       browser.goTo(s"${baseURL}/ephemeral/")
-      browser.$("#email").text("bob@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("bob@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain("Sign in")
@@ -202,8 +203,8 @@ class IntegrationSpec extends Specification {
       browser.pageSource must contain("no permission")
 
       browser.goTo(s"${baseURL}/ephemeral/logout")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/ephemeral/messages/write")
@@ -215,19 +216,19 @@ class IntegrationSpec extends Specification {
 
   "Stateless Sample" should {
 
-    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
       // login failed
       browser.goTo(s"$baseURL/stateless/")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secretxxx")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secretxxx")
       browser.$("#loginbutton").click()
       browser.pageSource must contain("Invalid email or password")
 
       // login succeded
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain ("Sign in")
@@ -242,14 +243,14 @@ class IntegrationSpec extends Specification {
 
     }
 
-    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
 
       // login succeded
       browser.goTo(s"$baseURL/stateless/")
-      browser.$("#email").text("bob@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("bob@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain("Sign in")
@@ -259,8 +260,8 @@ class IntegrationSpec extends Specification {
       browser.pageSource must contain("no permission")
 
       browser.goTo(s"${baseURL}/stateless/logout")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/stateless/messages/write")
@@ -272,7 +273,7 @@ class IntegrationSpec extends Specification {
 
   "HTTP Basic Auth Sample" should {
 
-    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
       // login failed
@@ -285,19 +286,19 @@ class IntegrationSpec extends Specification {
 
   "Remember Me Sample" should {
 
-    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "work from within a browser" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
       // login failed
       browser.goTo(s"$baseURL/rememberme/")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secretxxx")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secretxxx")
       browser.$("#loginbutton").click()
       browser.pageSource must contain("Invalid email or password")
 
       // login succeded
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain ("Sign in")
@@ -312,8 +313,8 @@ class IntegrationSpec extends Specification {
       browser.pageSource must contain("Sign in")
 
       // login succeded
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#rememberme").click()
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
@@ -325,14 +326,14 @@ class IntegrationSpec extends Specification {
 
     }
 
-    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "authorize" in new WithBrowser(webDriver = WebDriverFactory(HTMLUNIT), app = GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
 
       val baseURL = s"http://localhost:${port}"
 
       // login succeded
       browser.goTo(s"$baseURL/rememberme/")
-      browser.$("#email").text("bob@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("bob@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.pageSource must not contain("Sign in")
@@ -342,8 +343,8 @@ class IntegrationSpec extends Specification {
       browser.pageSource must contain("no permission")
 
       browser.goTo(s"${baseURL}/rememberme/logout")
-      browser.$("#email").text("alice@example.com")
-      browser.$("#password").text("secret")
+      browser.$("#email").write("alice@example.com")
+      browser.$("#password").write("secret")
       browser.$("#loginbutton").click()
       browser.$("dl.error").size must equalTo(0)
       browser.goTo(s"${baseURL}/standard/messages/write")

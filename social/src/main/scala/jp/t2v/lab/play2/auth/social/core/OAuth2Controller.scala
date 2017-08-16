@@ -12,7 +12,7 @@ import play.api.mvc._
 import scala.concurrent.Future
 import scala.util.control.NonFatal
 
-trait OAuth2Controller extends Controller with OAuthController { self: OptionalAuthElement with AuthConfig =>
+trait OAuth2Controller extends BaseController with OAuthController { self: OptionalAuthElement with AuthConfig =>
 
   protected def ws: WSClient
   protected def config: Configuration

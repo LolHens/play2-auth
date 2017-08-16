@@ -8,6 +8,7 @@ import jp.t2v.lab.play2.auth.test.Helpers._
 import java.io.File
 
 import jp.t2v.lab.play2.auth.sample.{AccountFixtures, Accounts}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Application, Environment}
 import play.api.libs.crypto.CookieSigner
 import scalikejdbc.AutoSession
@@ -24,7 +25,7 @@ class ApplicationSpec extends Specification {
   }
 
   "Messages" should {
-    "return list when user is authorized" in new WithApplication(FakeApplication(additionalConfiguration = inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1")))) {
+    "return list when user is authorized" in new WithApplication(GuiceApplicationBuilder().configure(inMemoryDatabase(name = "default", options = Map("DB_CLOSE_DELAY" -> "-1"))).build()) {
       implicit val s = AutoSession
       val res = new Messages(Environment.simple(), _accounts, app.injector.instanceOf[CookieSigner]).list(FakeRequest()
         .withLoggedIn(config)

@@ -6,7 +6,7 @@ import javax.inject.{Inject, Singleton}
 import jp.t2v.lab.play2.auth.social.core.{AccessTokenRetrievalFailedException, OAuth2Authenticator}
 import play.api.{Configuration, Logger}
 import play.api.http.{HeaderNames, MimeTypes}
-import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.libs.ws._
 import play.api.mvc.Results
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,13 +39,13 @@ class SlackAuthenticator @Inject()(val ws: WSClient, config: Configuration) exte
 
   override def retrieveAccessToken(code: String)(implicit ctx: ExecutionContext): Future[AccessToken] = {
     ws.url(accessTokenUrl)
-      .withQueryString(
+      .withQueryStringParameters(
         "client_id" -> clientId,
         "client_secret" -> clientSecret,
         "redirect_uri" -> callbackUrl,
         "code" -> code)
-      .withHeaders(HeaderNames.ACCEPT -> MimeTypes.JSON)
-      .post(Results.EmptyContent())
+      .withHttpHeaders(HeaderNames.ACCEPT -> MimeTypes.JSON)
+      .post(EmptyBody)
       .map { response =>
         Logger(getClass).debug("Retrieving access token from provider API: " + response.body)
         parseAccessTokenResponse(response)

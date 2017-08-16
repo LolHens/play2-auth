@@ -2,7 +2,7 @@ package jp.t2v.lab.play2.auth
 
 import scala.util.control.Exception._
 
-class TransparentIdContainer[Id: ToString: FromString] extends IdContainer[Id] {
+class TransparentIdContainer[Id: ToString : FromString] extends IdContainer[Id] {
 
   def startNewSession(userId: Id, timeoutInSeconds: Int) = implicitly[ToString[Id]].apply(userId)
 
@@ -20,6 +20,7 @@ class TransparentIdContainer[Id: ToString: FromString] extends IdContainer[Id] {
 trait ToString[A] {
   def apply(id: A): String
 }
+
 object ToString {
   def apply[A](f: A => String) = new ToString[A] {
     def apply(id: A) = f(id)
@@ -28,9 +29,11 @@ object ToString {
   implicit val int = ToString[Int](_.toString)
   implicit val long = ToString[Long](_.toString)
 }
+
 trait FromString[A] {
   def apply(id: String): Option[A]
 }
+
 object FromString {
   def apply[A](f: String => A) = new FromString[A] {
     def apply(id: String) = allCatch opt f(id)

@@ -10,7 +10,7 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-trait OAuth10aController extends Controller with OAuthController {
+trait OAuth10aController extends BaseController with OAuthController {
   self: OptionalAuthElement with AuthConfig =>
 
   protected def ws: WSClient

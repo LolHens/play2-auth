@@ -5,7 +5,7 @@ resolvers ++= Seq(
 )
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.0-SNAPSHOT")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.2")
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-language:_")
 

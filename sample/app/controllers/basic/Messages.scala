@@ -4,14 +4,14 @@ import javax.inject.Inject
 
 import controllers.stack.Pjax
 import jp.t2v.lab.play2.auth.AuthElement
-import play.api.mvc.Controller
+import play.api.mvc.{Controller, InjectedController}
 import views.html
 import jp.t2v.lab.play2.auth.sample.Role._
 import play.api.{Configuration, Environment}
 import play.api.libs.crypto.CookieSigner
 import play.twirl.api.Html
 
-class Messages @Inject() (val environment: Environment, val signer: CookieSigner) extends Controller with AuthElement
+class Messages @Inject() (val environment: Environment, val signer: CookieSigner) extends InjectedController with AuthElement
   with AuthConfigImpl {
 
   def main = StackAction(AuthorityKey -> NormalUser) { implicit request =>

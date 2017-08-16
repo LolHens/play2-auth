@@ -1,15 +1,17 @@
 package controllers.stack
 
-import jp.t2v.lab.play2.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
+import com.jaroop.play.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
+
 import scala.concurrent.Future
-import play.api.mvc.{Result, Request, Controller}
+import play.api.mvc.{Controller, InjectedController, Request, Result}
 import play.api.data._
 import play.api.data.Forms._
+
 import scala.util.Random
 import java.security.SecureRandom
 
 trait TokenValidateElement extends StackableController {
-    self: Controller =>
+    self: InjectedController =>
 
   private val PreventingCsrfTokenSessionKey = "preventingCsrfToken"
 

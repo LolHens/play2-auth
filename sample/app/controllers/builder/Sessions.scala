@@ -7,14 +7,14 @@ import jp.t2v.lab.play2.auth.sample.{Account, Accounts}
 import play.api.Environment
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, Controller, InjectedController}
 import views.html
 
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.crypto.CookieSigner
 
-class Sessions @Inject() (val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends Controller with LoginLogout with AuthConfigImpl {
+class Sessions @Inject() (val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends InjectedController with LoginLogout with AuthConfigImpl {
 
   val loginForm = Form {
     mapping("email" -> email, "password" -> text)(accounts.authenticate)(_.map(u => (u.email, "")))

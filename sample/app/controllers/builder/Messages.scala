@@ -3,8 +3,8 @@ package controllers.builder
 import javax.inject.Inject
 
 import jp.t2v.lab.play2.auth.AuthActionBuilders
-import jp.t2v.lab.play2.auth.sample.{Account, Accounts}
 import jp.t2v.lab.play2.auth.sample.Role._
+import jp.t2v.lab.play2.auth.sample.{Account, Accounts}
 import play.api.Environment
 import play.api.libs.crypto.CookieSigner
 import play.api.mvc._
@@ -12,10 +12,11 @@ import play.twirl.api.Html
 import scalikejdbc.{DB, DBSession}
 import views.html
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class TransactionalRequest[+A](val dbSession: DBSession, request: Request[A]) extends WrappedRequest[A](request)
-object TransactionalAction extends ActionBuilder[TransactionalRequest] {
+
+object TransactionalAction extends ActionBuilder[TransactionalRequest, AnyContent] {
   override def invokeBlock[A](request: Request[A], block: (TransactionalRequest[A]) => Future[Result]): Future[Result] = {
     import scalikejdbc.TxBoundary.Future._
     implicit val ctx = executionContext
@@ -23,22 +24,27 @@ object TransactionalAction extends ActionBuilder[TransactionalRequest] {
       block(new TransactionalRequest(session, request))
     }
   }
+  override def parser = ??? // TODO
+  override protected def executionContext = scala.concurrent.ExecutionContext.Implicits.global // TODO
 }
 
-class Messages @Inject() (val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends Controller with AuthActionBuilders with AuthConfigImpl {
+class Messages @Inject()(val environment: Environment, val accounts: Accounts, val signer: CookieSigner, val executionContext: ExecutionContext) extends InjectedController with AuthActionBuilders with AuthConfigImpl {
 
   type AuthTxRequest[+A] = GenericAuthRequest[A, TransactionalRequest]
-  final def AuthorizationTxAction(authority: Authority): ActionBuilder[AuthTxRequest] = composeAuthorizationAction(TransactionalAction)(authority)
+  final def AuthorizationTxAction(authority: Authority): ActionBuilder[AuthTxRequest, AnyContent] = composeAuthorizationAction(TransactionalAction)(authority)
 
   class PjaxAuthRequest[+A](val template: String => Html => Html, val authRequest: AuthTxRequest[A]) extends WrappedRequest[A](authRequest)
+
   object PjaxRefiner extends ActionTransformer[AuthTxRequest, PjaxAuthRequest] {
     override protected def transform[A](request: AuthTxRequest[A]): Future[PjaxAuthRequest[A]] = {
       val template: String => Html => Html = if (request.headers.keys("X-Pjax")) html.pjaxTemplate.apply else html.builder.fullTemplate.apply(request.user)
       Future.successful(new PjaxAuthRequest(template, request))
     }
+
+    override protected def executionContext: ExecutionContext = Messages.this.executionContext
   }
 
-  def MyAction(authority: Authority): ActionBuilder[PjaxAuthRequest] = AuthorizationTxAction(authority) andThen PjaxRefiner
+  def MyAction(authority: Authority): ActionBuilder[PjaxAuthRequest, AnyContent] = AuthorizationTxAction(authority) andThen PjaxRefiner
 
   def main = MyAction(NormalUser) { implicit request =>
     val title = "message main"
@@ -51,7 +57,7 @@ class Messages @Inject() (val environment: Environment, val accounts: Accounts, 
     Ok(html.message.list(title)(request.template))
   }
 
-  def detail(id: Int) = MyAction(NormalUser) {implicit request =>
+  def detail(id: Int) = MyAction(NormalUser) { implicit request =>
     val title = "messages detail "
     Ok(html.message.detail(title + id)(request.template))
   }
