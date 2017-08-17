@@ -47,6 +47,7 @@ inThisBuild(Seq(
 val playVersion = play.core.PlayVersion.current
 
 lazy val core = project.in(file("module"))
+  .settings(name := (name in ThisBuild).value)
   .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play" % playVersion % "provided",
@@ -57,13 +58,14 @@ lazy val core = project.in(file("module"))
 
 lazy val test = project.in(file("test"))
   .settings(
+    name := (name in ThisBuild).value + "-test",
     libraryDependencies += "com.typesafe.play" %% "play-test" % playVersion
-    //name                    := appName + "-test",
   ).dependsOn(core)
 
 lazy val sample = project.in(file("sample"))
   .enablePlugins(play.sbt.PlayScala)
   .settings(
+    name := (name in ThisBuild).value + "-sample",
     resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
     libraryDependencies ++= Seq(
       play.sbt.Play.autoImport.ehcache,
@@ -94,7 +96,7 @@ lazy val sample = project.in(file("sample"))
 
 lazy val social = Project(id = "social", base = file("social"))
   .settings(
-    //name                := appName + "-social",
+    name := (name in ThisBuild).value + "-social",
     libraryDependencies ++= Seq(
       play.sbt.Play.autoImport.ws,
       "com.typesafe.play" %% "play" % playVersion % "provided",
@@ -105,7 +107,7 @@ lazy val social = Project(id = "social", base = file("social"))
 lazy val socialSample = Project("social-sample", file("social-sample"))
   .enablePlugins(play.sbt.PlayScala)
   .settings(
-    //name                := appName + "-social-sample",
+    name := (name in ThisBuild).value + "-social-sample",
     resourceDirectories in Test += baseDirectory.value / "conf",
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     libraryDependencies ++= Seq(
@@ -125,6 +127,6 @@ lazy val socialSample = Project("social-sample", file("social-sample"))
   )
   .dependsOn(core, social)
 
-lazy val root = Project("root", base = file("."))
+lazy val root = project.in(file("."))
   .settings(publishArtifact := false)
   .aggregate(core, test, sample, social, socialSample)
