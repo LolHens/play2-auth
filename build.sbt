@@ -2,7 +2,7 @@ name := (name in ThisBuild).value
 
 inThisBuild(Seq(
   name := "play2-auth",
-  version := "0.16.0-SNAPSHOT",
+  version := "0.16.0",
   scalaVersion := "2.12.3",
   organization := "org.lolhens",
   resolvers := Seq(
@@ -52,7 +52,7 @@ lazy val core = project.in(file("module"))
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play" % playVersion % "provided",
       "com.typesafe.play" %% "play-cache" % playVersion % "provided",
-      "com.jaroop" %% "stackable-controller" % "0.7.0-SNAPSHOT"
+      "com.jaroop" %% "stackable-controller" % "0.7.0"
     )
   )
 
