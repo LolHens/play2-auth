@@ -1,8 +1,7 @@
 package controllers.csrf
 
-import javax.inject.Inject
-
 import controllers.stack.TokenValidateElement
+import javax.inject.Inject
 import jp.t2v.lab.play2.auth.AuthElement
 import jp.t2v.lab.play2.auth.sample.Accounts
 import jp.t2v.lab.play2.auth.sample.Role._
@@ -10,9 +9,9 @@ import play.api.Environment
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.crypto.CookieSigner
-import play.api.mvc.InjectedController
+import play.api.mvc.{AbstractController, ControllerComponents}
 
-class PreventingCsrfSample @Inject()(val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends InjectedController with TokenValidateElement with AuthElement with AuthConfigImpl {
+class PreventingCsrfSample @Inject()(components: ControllerComponents, val environment: Environment, val accounts: Accounts, val signer: CookieSigner) extends AbstractController(components) with TokenValidateElement with AuthElement with AuthConfigImpl {
 
   def formWithToken = StackAction(AuthorityKey -> NormalUser, IgnoreTokenValidation -> true) { implicit req =>
     Ok(views.html.csrf.formWithToken())

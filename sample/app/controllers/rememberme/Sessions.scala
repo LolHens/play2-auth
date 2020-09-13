@@ -8,12 +8,12 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.crypto.CookieSigner
 import play.api.libs.typedmap.TypedKey
-import play.api.mvc.InjectedController
+import play.api.mvc.{AbstractController, ControllerComponents}
 import views.html
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Sessions @Inject()(val environment: Environment, val accounts: Accounts, val signer: CookieSigner)(implicit val executionContext: ExecutionContext) extends InjectedController with LoginLogout with AuthConfigImpl {
+class Sessions @Inject()(components: ControllerComponents, val environment: Environment, val accounts: Accounts, val signer: CookieSigner)(implicit val executionContext: ExecutionContext) extends AbstractController(components) with LoginLogout with AuthConfigImpl {
 
   val loginForm = Form {
     mapping("email" -> email, "password" -> text)(accounts.authenticate)(_.map(u => (u.email, "")))

@@ -1,11 +1,13 @@
 package jp.t2v.lab.play2.auth
 
+import javax.inject.Inject
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Inject
 trait Login {
-  self: BaseController with AuthConfig =>
+  self: AbstractController with AuthConfig =>
 
   def gotoLoginSucceeded(userId: Id)(implicit request: RequestHeader, ctx: ExecutionContext): Future[Result] = {
     gotoLoginSucceeded(userId, loginSucceeded(request))
@@ -17,8 +19,9 @@ trait Login {
   } yield tokenAccessor.put(signer, token)(r)
 }
 
+@Inject
 trait Logout {
-  self: BaseController with AuthConfig =>
+  self: AbstractController with AuthConfig =>
 
   def gotoLogoutSucceeded(implicit request: RequestHeader, ctx: ExecutionContext): Future[Result] = {
     gotoLogoutSucceeded(logoutSucceeded(request))
@@ -30,6 +33,7 @@ trait Logout {
   }
 }
 
+@Inject
 trait LoginLogout extends Login with Logout {
-  self: BaseController with AuthConfig =>
+  self: AbstractController with AuthConfig =>
 }

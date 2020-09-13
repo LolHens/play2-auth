@@ -1,19 +1,18 @@
 package controllers.csrf
 
 import javax.inject.Inject
-
 import jp.t2v.lab.play2.auth.LoginLogout
 import jp.t2v.lab.play2.auth.sample.Accounts
 import play.api.Environment
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.crypto.CookieSigner
-import play.api.mvc.InjectedController
+import play.api.mvc.{AbstractController, ControllerComponents}
 import views.html
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Sessions @Inject()(val environment: Environment, val accounts: Accounts, val signer: CookieSigner)(implicit val executionContext: ExecutionContext) extends InjectedController with LoginLogout with AuthConfigImpl {
+class Sessions @Inject()(components: ControllerComponents, val environment: Environment, val accounts: Accounts, val signer: CookieSigner)(implicit val executionContext: ExecutionContext) extends AbstractController(components) with LoginLogout with AuthConfigImpl {
 
   val loginForm = Form {
     mapping("email" -> email, "password" -> text)(accounts.authenticate)(_.map(u => (u.email, "")))

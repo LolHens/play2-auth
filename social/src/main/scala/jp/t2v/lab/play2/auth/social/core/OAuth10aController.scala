@@ -1,5 +1,6 @@
 package jp.t2v.lab.play2.auth.social.core
 
+import javax.inject.Inject
 import jp.t2v.lab.play2.auth.{AuthConfig, OptionalAuthElement}
 import play.api._
 import play.api.data.Form
@@ -10,7 +11,8 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 
-trait OAuth10aController extends BaseController with OAuthController {
+@Inject
+trait OAuth10aController extends AbstractController with OAuthController {
   self: OptionalAuthElement with AuthConfig =>
 
   protected def ws: WSClient

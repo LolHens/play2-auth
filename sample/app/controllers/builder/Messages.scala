@@ -1,7 +1,6 @@
 package controllers.builder
 
 import javax.inject.Inject
-
 import jp.t2v.lab.play2.auth.AuthActionBuilders
 import jp.t2v.lab.play2.auth.sample.Role._
 import jp.t2v.lab.play2.auth.sample.{Account, Accounts}
@@ -16,7 +15,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TransactionalRequest[+A](val dbSession: DBSession, request: Request[A]) extends WrappedRequest[A](request)
 
-object TransactionalAction extends ActionBuilder[TransactionalRequest, AnyContent] {
+class TransactionalAction @Inject() (val parser: BodyParsers.Default, val executionContext: ExecutionContext) extends ActionBuilder[TransactionalRequest, AnyContent] {
   override def invokeBlock[A](request: Request[A], block: (TransactionalRequest[A]) => Future[Result]): Future[Result] = {
     import scalikejdbc.TxBoundary.Future._
     implicit val ctx = executionContext
@@ -24,14 +23,12 @@ object TransactionalAction extends ActionBuilder[TransactionalRequest, AnyConten
       block(new TransactionalRequest(session, request))
     }
   }
-  override def parser = ??? // TODO
-  override protected def executionContext = scala.concurrent.ExecutionContext.Implicits.global // TODO
 }
 
-class Messages @Inject()(val environment: Environment, val accounts: Accounts, val signer: CookieSigner, val executionContext: ExecutionContext) extends InjectedController with AuthActionBuilders with AuthConfigImpl {
+class Messages @Inject()(components: ControllerComponents, val environment: Environment, val accounts: Accounts, val signer: CookieSigner, val executionContext: ExecutionContext, transactionalAction: TransactionalAction) extends AbstractController(components) with AuthActionBuilders with AuthConfigImpl {
 
   type AuthTxRequest[+A] = GenericAuthRequest[A, TransactionalRequest]
-  final def AuthorizationTxAction(authority: Authority): ActionBuilder[AuthTxRequest, AnyContent] = composeAuthorizationAction(TransactionalAction)(authority)
+  final def AuthorizationTxAction(authority: Authority): ActionBuilder[AuthTxRequest, AnyContent] = composeAuthorizationAction(transactionalAction)(authority)
 
   class PjaxAuthRequest[+A](val template: String => Html => Html, val authRequest: AuthTxRequest[A]) extends WrappedRequest[A](authRequest)
 

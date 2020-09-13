@@ -276,7 +276,7 @@ class IntegrationSpec extends Specification {
       val baseURL = s"http://localhost:${port}"
       // login failed
       browser.goTo(s"$baseURL/basic/")
-      browser.url must equalTo("/basic/messages/main")
+      browser.url must equalTo("basic/messages/main")
 
     }
 

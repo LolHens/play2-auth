@@ -19,7 +19,7 @@ import scalikejdbc.DB
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.{ClassTag, classTag}
 
-class Application @Inject()(val environment: Environment, val cacheApi: SyncCacheApi, val signer: CookieSigner) extends InjectedController with OptionalAuthElement with AuthConfigImpl with Logout {
+class Application @Inject()(components: ControllerComponents, val environment: Environment, val cacheApi: SyncCacheApi, val signer: CookieSigner) extends AbstractController(components) with OptionalAuthElement with AuthConfigImpl with Logout {
 
   def index = StackAction { implicit request =>
     DB.readOnly { implicit session =>
@@ -74,11 +74,13 @@ trait AuthConfigImpl extends AuthConfig {
 
 }
 
-class FacebookAuthController @Inject()(val environment: Environment, val cacheApi: SyncCacheApi,
+class FacebookAuthController @Inject()(components: ControllerComponents,
+                                       val environment: Environment,
+                                       val cacheApi: SyncCacheApi,
                                        val signer: CookieSigner,
                                        val ws: WSClient,
                                        val config: Configuration,
-                                       val OAuthExecutionContext: ExecutionContext) extends InjectedController
+                                       val OAuthExecutionContext: ExecutionContext) extends AbstractController(components)
   with FacebookController
   with AuthConfigImpl
   with FacebookProviderUserSupport {
@@ -109,13 +111,13 @@ class FacebookAuthController @Inject()(val environment: Environment, val cacheAp
 
 }
 
-class GitHubAuthController @Inject()(val environment: Environment, val cacheApi: SyncCacheApi,
+class GitHubAuthController @Inject()(components: ControllerComponents,
+                                     val environment: Environment,
+                                     val cacheApi: SyncCacheApi,
                                      val signer: CookieSigner,
                                      val ws: WSClient,
                                      val config: Configuration,
-                                     val OAuthExecutionContext: ExecutionContext)
-  extends
-    InjectedController
+                                     val OAuthExecutionContext: ExecutionContext) extends AbstractController(components)
     with GitHubController
     with AuthConfigImpl
     with GitHubProviderUserSupport {
@@ -146,11 +148,13 @@ class GitHubAuthController @Inject()(val environment: Environment, val cacheApi:
 
 }
 
-class TwitterAuthController @Inject()(val environment: Environment, val cacheApi: SyncCacheApi,
+class TwitterAuthController @Inject()(components: ControllerComponents,
+                                      val environment: Environment,
+                                      val cacheApi: SyncCacheApi,
                                       val signer: CookieSigner,
                                       val ws: WSClient,
                                       val config: Configuration,
-                                      val OAuthExecutionContext: ExecutionContext) extends InjectedController
+                                      val OAuthExecutionContext: ExecutionContext) extends AbstractController(components)
   with TwitterController
   with AuthConfigImpl
   with TwitterProviderUserSupport {
@@ -181,11 +185,13 @@ class TwitterAuthController @Inject()(val environment: Environment, val cacheApi
 
 }
 
-class SlackAuthController @Inject()(val environment: Environment, val cacheApi: SyncCacheApi,
+class SlackAuthController @Inject()(components: ControllerComponents,
+                                    val environment: Environment,
+                                    val cacheApi: SyncCacheApi,
                                     val signer: CookieSigner,
                                     val ws: WSClient,
                                     val config: Configuration,
-                                    val OAuthExecutionContext: ExecutionContext) extends InjectedController
+                                    val OAuthExecutionContext: ExecutionContext) extends AbstractController(components)
   with SlackController
   with AuthConfigImpl {
 

@@ -5,13 +5,13 @@ import java.security.SecureRandom
 import jp.t2v.lab.play2.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
 import play.api.data.Forms._
 import play.api.data._
-import play.api.mvc.{InjectedController, Request, Result}
+import play.api.mvc.{AbstractController, InjectedController, Request, Result}
 
 import scala.concurrent.Future
 import scala.util.Random
 
 trait TokenValidateElement extends StackableController {
-  self: InjectedController =>
+  self: AbstractController =>
 
   private val PreventingCsrfTokenSessionKey = "preventingCsrfToken"
 

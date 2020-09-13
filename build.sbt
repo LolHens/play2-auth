@@ -51,7 +51,7 @@ lazy val core = project.in(file("module"))
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play" % playVersion % "provided",
       "com.typesafe.play" %% "play-cache" % playVersion % "provided",
-      "de.lolhens" %% "stackable-controller" % "0.7.0"
+      "de.lolhens" %% "stackable-controller" % "0.7.2"
     )
   )
 
@@ -68,7 +68,8 @@ lazy val test = project.in(file("test"))
   ).dependsOn(core)
 
 lazy val sample = project.in(file("sample"))
-  .enablePlugins(play.sbt.PlayScala)
+  .enablePlugins(PlayScala)
+  .disablePlugins(PlayFilters)
   .settings(commonSettings)
   .settings(
     publish / skip := true,
@@ -117,7 +118,8 @@ lazy val social = project.in(file("social"))
   ).dependsOn(core)
 
 lazy val socialSample = project.in(file("social-sample"))
-  .enablePlugins(play.sbt.PlayScala)
+  .enablePlugins(PlayScala)
+  .disablePlugins(PlayFilters)
   .settings(commonSettings)
   .settings(
     publish / skip := true,
