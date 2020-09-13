@@ -1,15 +1,35 @@
-Play2.x module for Authentication and Authorization [![Build Status](https://secure.travis-ci.org/t2v/play2-auth.png)](https://travis-ci.org/t2v/play2-auth)
+Play2.x module for Authentication and Authorization
 ===========================================================
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/t2v/play2-auth?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Release Notes](https://img.shields.io/github/release/LolHens/play2-auth.svg?maxAge=3600)](https://github.com/LolHens/play2-auth/releases/latest)
+[![Maven Central](https://img.shields.io/maven-central/v/de.lolhens/play2-auth_2.13)](https://search.maven.org/artifact/de.lolhens/play2-auth_2.13)
+[![Apache License 2.0](https://img.shields.io/github/license/LolHens/play2-auth.svg?maxAge=3600)](https://www.apache.org/licenses/LICENSE-2.0)
 
 This module offers Authentication and Authorization features to Play2.x applications
 
-Scaladoc
-----------------------------------------
 
-- [![play2-auth scaladoc](http://javadoc-badge.appspot.com/jp.t2v/play2-auth_2.11.svg?label=play2-auth)](http://javadoc-badge.appspot.com/jp.t2v/play2-auth_2.11/index.html#jp.t2v.lab.play2.auth.package)
-- [![play2-auth-social scaladoc](http://javadoc-badge.appspot.com/jp.t2v/play2-auth-social_2.11.svg?label=play2-auth-social)](http://javadoc-badge.appspot.com/jp.t2v/play2-auth-social_2.11/index.html#jp.t2v.lab.play2.auth.social.package)
-- [![play2-auth-test scaladoc](http://javadoc-badge.appspot.com/jp.t2v/play2-auth-test_2.11.svg?label=play2-auth-test)](http://javadoc-badge.appspot.com/jp.t2v/play2-auth-test_2.11/index.html#jp.t2v.lab.play2.auth.test.package)
+Installation
+---------------------------------------
+
+Add dependency declarations into your `build.sbt` file:
+
+```scala
+libraryDependencies ++= Seq(
+  "de.lolhens" %% "play2-auth"        % "0.16.1",
+  "de.lolhens" %% "play2-auth-social" % "0.16.1",
+  "de.lolhens" %% "play2-auth-test"   % "0.16.1" % "test",
+  cache
+)
+```
+
+__for Play2.4.x__
+```scala
+libraryDependencies ++= Seq(
+  "jp.t2v" %% "play2-auth"        % "0.14.2",
+  "jp.t2v" %% "play2-auth-social" % "0.14.2", // for social login
+  "jp.t2v" %% "play2-auth-test"   % "0.14.2" % "test",
+  cache // only when you use default IdContainer
+)
+```
 
 
 Target
@@ -56,29 +76,6 @@ Attention
 
 <strong style="font-size: 200%; color: red;">Since Play2.2's `Result` is deprecated, The play2.auth trait signatures are changed at version 0.11.0</strong>
 
-
-Installation
----------------------------------------
-
-Add dependency declarations into your `Build.scala` or `build.sbt` file:
-
-* __for Play2.4.x__
-
-        "jp.t2v" %% "play2-auth"        % "0.14.2",
-        "jp.t2v" %% "play2-auth-social" % "0.14.2", // for social login
-        "jp.t2v" %% "play2-auth-test"   % "0.14.2" % "test",
-        play.sbt.Play.autoImport.cache // only when you use default IdContainer
-
-For example your `Build.scala` might look like this:
-
-```scala
-  val appDependencies = Seq(
-    "jp.t2v" %% "play2-auth"        % "0.14.2",
-    "jp.t2v" %% "play2-auth-social" % "0.14.2",
-    "jp.t2v" %% "play2-auth-test"   % "0.14.2" % "test",
-    play.sbt.Play.autoImport.cache
-  )
-```
 
 Usage
 ---------------------------------------

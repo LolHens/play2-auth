@@ -58,8 +58,6 @@ lazy val core = project.in(file("module"))
 lazy val test = project.in(file("test"))
   .settings(commonSettings)
   .settings(
-    publish / skip := true,
-
     name := "play2-auth-test",
 
     libraryDependencies ++= Seq(
