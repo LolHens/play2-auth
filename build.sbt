@@ -1,6 +1,6 @@
 lazy val commonSettings: Seq[Setting[_]] = Seq(
   organization := "de.lolhens",
-  version := "0.16.0",
+  version := "0.16.0-SNAPSHOT",
 
   scalaVersion := "2.13.3",
   crossScalaVersions := Seq("2.12.12", scalaVersion.value),
