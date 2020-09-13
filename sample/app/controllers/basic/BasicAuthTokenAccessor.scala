@@ -1,9 +1,9 @@
 package controllers.basic
 
 import java.nio.charset.Charset
+import java.util.Base64
 
 import jp.t2v.lab.play2.auth.{AuthenticityToken, TokenAccessor}
-import org.apache.commons.codec.binary.Base64
 import play.api.libs.crypto.CookieSigner
 import play.api.mvc.{RequestHeader, Result}
 
@@ -19,7 +19,7 @@ class BasicAuthTokenAccessor extends TokenAccessor {
       h <- request.headers.get("Authorization")
       if h.startsWith("Basic ")
     } yield h.substring(6)
-    encoded.map(s => new String(Base64.decodeBase64(s), Charset.forName("UTF-8")))
+    encoded.map(s => new String(Base64.getDecoder.decode(s), Charset.forName("UTF-8")))
   }
 
 }

@@ -30,32 +30,32 @@ class CacheIdContainer[Id: ClassTag](cacheApi: SyncCacheApi) extends IdContainer
     if (get(token).isDefined) generate else token
   }
 
-  private[auth] def removeByUserId(userId: Id) {
+  private[auth] def removeByUserId(userId: Id): Unit = {
     cacheApi.get[String](userId.toString + userIdSuffix) foreach unsetToken
     unsetUserId(userId)
   }
 
-  def remove(token: AuthenticityToken) {
-    get(token) foreach unsetUserId
+  def remove(token: AuthenticityToken): Unit = {
+    get(token).foreach(unsetUserId)
     unsetToken(token)
   }
 
-  private[auth] def unsetToken(token: AuthenticityToken) {
+  private[auth] def unsetToken(token: AuthenticityToken): Unit = {
     cacheApi.remove(token + tokenSuffix)
   }
-  private[auth] def unsetUserId(userId: Id) {
+  private[auth] def unsetUserId(userId: Id): Unit = {
     cacheApi.remove(userId.toString + userIdSuffix)
   }
 
   def get(token: AuthenticityToken) = cacheApi.get(token + tokenSuffix).map(_.asInstanceOf[Id])
 
-  private[auth] def store(token: AuthenticityToken, userId: Id, timeoutInSeconds: Int) {
+  private[auth] def store(token: AuthenticityToken, userId: Id, timeoutInSeconds: Int): Unit = {
     def intToDuration(seconds: Int): Duration = if (seconds == 0) Duration.Inf else Duration(seconds, TimeUnit.SECONDS)
     cacheApi.set(token + tokenSuffix, userId, intToDuration(timeoutInSeconds))
     cacheApi.set(userId.toString + userIdSuffix, token, intToDuration(timeoutInSeconds))
   }
 
-  def prolongTimeout(token: AuthenticityToken, timeoutInSeconds: Int) {
+  def prolongTimeout(token: AuthenticityToken, timeoutInSeconds: Int): Unit = {
     get(token).foreach(store(token, _, timeoutInSeconds))
   }
 

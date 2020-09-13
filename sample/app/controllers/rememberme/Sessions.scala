@@ -1,13 +1,13 @@
 package controllers.rememberme
 
 import javax.inject.Inject
-
 import jp.t2v.lab.play2.auth.LoginLogout
 import jp.t2v.lab.play2.auth.sample.Accounts
 import play.api.Environment
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.crypto.CookieSigner
+import play.api.libs.typedmap.TypedKey
 import play.api.mvc.InjectedController
 import views.html
 
@@ -37,7 +37,7 @@ class Sessions @Inject()(val environment: Environment, val accounts: Accounts, v
     val rememberme = remembermeForm.bindFromRequest()
     loginForm.bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(html.rememberme.login(formWithErrors, rememberme))), { user =>
-        val req = request.withTag("rememberme", rememberme.get.toString)
+        val req = request.addAttr(TypedKey("rememberme"), rememberme.get.toString)
         gotoLoginSucceeded(user.get.id)(req, executionContext).map(_.withSession("rememberme" -> rememberme.get.toString))
       }
     )

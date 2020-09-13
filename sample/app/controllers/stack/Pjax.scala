@@ -1,6 +1,6 @@
 package controllers.stack
 
-import com.jaroop.play.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
+import jp.t2v.lab.play2.stackc.{RequestAttributeKey, RequestWithAttributes, StackableController}
 import controllers.BaseAuthConfig
 import jp.t2v.lab.play2.auth.AuthElement
 import play.api.mvc.{InjectedController, Result}

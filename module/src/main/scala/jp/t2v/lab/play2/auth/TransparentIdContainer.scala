@@ -6,12 +6,12 @@ class TransparentIdContainer[Id: ToString : FromString] extends IdContainer[Id] 
 
   def startNewSession(userId: Id, timeoutInSeconds: Int) = implicitly[ToString[Id]].apply(userId)
 
-  def remove(token: AuthenticityToken) {
+  def remove(token: AuthenticityToken): Unit = {
   }
 
   def get(token: AuthenticityToken) = implicitly[FromString[Id]].apply(token)
 
-  def prolongTimeout(token: AuthenticityToken, timeoutInSeconds: Int) {
+  def prolongTimeout(token: AuthenticityToken, timeoutInSeconds: Int): Unit = {
     // Cookie Id Container does not support timeout.
   }
 

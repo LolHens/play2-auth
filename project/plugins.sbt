@@ -1,11 +1,7 @@
-// The Typesafe repository
-resolvers ++= Seq(
-  "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
-  "Typesafe Snapshots repository" at "http://repo.typesafe.com/typesafe/snapshots/"
-)
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.1")
 
-// Use the Play sbt plugin for Play projects
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.2")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.8.2")
 
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-language:_")
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.9.4")
 
+addSbtPlugin("com.jsuereth" % "sbt-pgp" % "2.0.1")
